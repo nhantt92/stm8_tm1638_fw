@@ -1,0 +1,46 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+    _GPIO_Init                                                     ****** GX
+    _GPIO_ReadInputPin                                             ****** GX
+    _GPIO_WriteHigh                                                ****** GX
+    _GPIO_WriteLow                                                 ****** GX
+  7 _TM1638_Init                                                   000000 GR
+  7 _TM1638_SendData                                               0002A2 GR
+  7 _TM1638_SendIntData                                            000344 GR
+  7 _clearDisplay                                                  00028E GR
+  7 _clearDisplayDigit                                             000260 GR
+  7 _configDisplay                                                 0001DD GR
+  7 _readByte                                                      00010D R
+  7 _sendChar                                                      0001C5 GR
+  7 _setDisplay                                                    00026E GR
+  7 _setDisplayDigit                                               000247 GR
+  1 _tm1638                                                        000000 GR
+  7 _tm_dat                                                        000357 GR
+  7 _writeByte                                                     0000B7 R
+  7 _writeCmd                                                      000181 R
+  7 _writeData                                                     0001AE R
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      7   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 DABS                                       size      0   flags    8
+   4 HOME                                       size      0   flags    0
+   5 GSINIT                                     size      0   flags    0
+   6 GSFINAL                                    size      0   flags    0
+   7 CODE                                       size    38F   flags    0
+   8 INITIALIZER                                size      0   flags    0
+   9 CABS                                       size      0   flags    8
+

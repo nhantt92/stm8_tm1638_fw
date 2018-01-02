@@ -1,0 +1,14 @@
+-muwx
+-i firmware/main.ihx
+-Y
+-b HOME = 0x8000
+-b DATA = 0x0001
+-k c:\Program Files\SDCC\bin\..\lib\stm8
+-l stm8
+-l stm8
+build/user/main.rel
+build/user/tm1638.rel
+build/lib/stm8s_clk.rel
+build/lib/stm8s_gpio.rel
+
+-e
