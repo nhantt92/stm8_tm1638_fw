@@ -1,6 +1,6 @@
                                       1 ;--------------------------------------------------------
                                       2 ; File Created by SDCC : free open source ANSI-C Compiler
-                                      3 ; Version 3.6.0 #9615 (MINGW64)
+                                      3 ; Version 3.6.0 #9615 (Mac OS X x86_64)
                                       4 ;--------------------------------------------------------
                                       5 	.module tm1638
                                       6 	.optsdcc -mstm8
@@ -8,743 +8,740 @@
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
-                                     11 	.globl _tm_dat
-                                     12 	.globl _GPIO_ReadInputPin
-                                     13 	.globl _GPIO_WriteLow
-                                     14 	.globl _GPIO_WriteHigh
-                                     15 	.globl _GPIO_Init
-                                     16 	.globl _tm1638
-                                     17 	.globl _TM1638_Init
-                                     18 	.globl _sendChar
-                                     19 	.globl _configDisplay
-                                     20 	.globl _setDisplayDigit
-                                     21 	.globl _clearDisplayDigit
-                                     22 	.globl _setDisplay
-                                     23 	.globl _clearDisplay
-                                     24 	.globl _TM1638_SendData
-                                     25 	.globl _TM1638_SendIntData
-                                     26 ;--------------------------------------------------------
-                                     27 ; ram data
+                                     11 	.globl _ERROR_DATA
+                                     12 	.globl _NUMBER_FONT
+                                     13 	.globl _GPIO_ReadInputPin
+                                     14 	.globl _GPIO_WriteLow
+                                     15 	.globl _GPIO_WriteHigh
+                                     16 	.globl _GPIO_Init
+                                     17 	.globl _tm1638
+                                     18 	.globl _TM1638_Init
+                                     19 	.globl _sendChar
+                                     20 	.globl _configDisplay
+                                     21 	.globl _setDisplayDigit
+                                     22 	.globl _clearDisplayDigit
+                                     23 	.globl _setDisplay
+                                     24 	.globl _clearDisplay
+                                     25 	.globl _displayNumber
+                                     26 	.globl _setLed
+                                     27 	.globl _getKey
                                      28 ;--------------------------------------------------------
-                                     29 	.area DATA
-      000001                         30 _tm1638::
-      000001                         31 	.ds 7
-                                     32 ;--------------------------------------------------------
-                                     33 ; ram data
+                                     29 ; ram data
+                                     30 ;--------------------------------------------------------
+                                     31 	.area DATA
+      000010                         32 _tm1638::
+      000010                         33 	.ds 8
                                      34 ;--------------------------------------------------------
-                                     35 	.area INITIALIZED
+                                     35 ; ram data
                                      36 ;--------------------------------------------------------
-                                     37 ; absolute external ram data
+                                     37 	.area INITIALIZED
                                      38 ;--------------------------------------------------------
-                                     39 	.area DABS (ABS)
+                                     39 ; absolute external ram data
                                      40 ;--------------------------------------------------------
-                                     41 ; global & static initialisations
+                                     41 	.area DABS (ABS)
                                      42 ;--------------------------------------------------------
-                                     43 	.area HOME
-                                     44 	.area GSINIT
-                                     45 	.area GSFINAL
+                                     43 ; global & static initialisations
+                                     44 ;--------------------------------------------------------
+                                     45 	.area HOME
                                      46 	.area GSINIT
-                                     47 ;--------------------------------------------------------
-                                     48 ; Home
+                                     47 	.area GSFINAL
+                                     48 	.area GSINIT
                                      49 ;--------------------------------------------------------
-                                     50 	.area HOME
-                                     51 	.area HOME
-                                     52 ;--------------------------------------------------------
-                                     53 ; code
+                                     50 ; Home
+                                     51 ;--------------------------------------------------------
+                                     52 	.area HOME
+                                     53 	.area HOME
                                      54 ;--------------------------------------------------------
-                                     55 	.area CODE
-                                     56 ;	user/tm1638.c: 20: void TM1638_Init(GPIO_TypeDef* displayPort, GPIO_Pin_TypeDef StbPin, GPIO_Pin_TypeDef ClkPin, GPIO_Pin_TypeDef DataPin)
-                                     57 ;	-----------------------------------------
-                                     58 ;	 function TM1638_Init
+                                     55 ; code
+                                     56 ;--------------------------------------------------------
+                                     57 	.area CODE
+                                     58 ;	user/tm1638.c: 45: void TM1638_Init(GPIO_TypeDef* displayPort, GPIO_Pin_TypeDef StbPin, GPIO_Pin_TypeDef ClkPin, GPIO_Pin_TypeDef DataPin)
                                      59 ;	-----------------------------------------
-      008150                         60 _TM1638_Init:
-      008150 52 0A            [ 2]   61 	sub	sp, #10
-                                     62 ;	user/tm1638.c: 23: tm1638.displayPort = displayPort;
-      008152 AE 00 01         [ 2]   63 	ldw	x, #_tm1638+0
-      008155 16 0D            [ 2]   64 	ldw	y, (0x0d, sp)
-      008157 FF               [ 2]   65 	ldw	(x), y
-                                     66 ;	user/tm1638.c: 24: tm1638.StbPin = StbPin;
-      008158 AE 00 01         [ 2]   67 	ldw	x, #_tm1638+0
-      00815B 1F 07            [ 2]   68 	ldw	(0x07, sp), x
-      00815D 1E 07            [ 2]   69 	ldw	x, (0x07, sp)
-      00815F 5C               [ 2]   70 	incw	x
-      008160 5C               [ 2]   71 	incw	x
-      008161 1F 03            [ 2]   72 	ldw	(0x03, sp), x
-      008163 1E 03            [ 2]   73 	ldw	x, (0x03, sp)
-      008165 7B 0F            [ 1]   74 	ld	a, (0x0f, sp)
-      008167 F7               [ 1]   75 	ld	(x), a
-                                     76 ;	user/tm1638.c: 25: tm1638.ClkPin = ClkPin;
-      008168 1E 07            [ 2]   77 	ldw	x, (0x07, sp)
-      00816A 1C 00 03         [ 2]   78 	addw	x, #0x0003
-      00816D 1F 09            [ 2]   79 	ldw	(0x09, sp), x
-      00816F 1E 09            [ 2]   80 	ldw	x, (0x09, sp)
-      008171 7B 10            [ 1]   81 	ld	a, (0x10, sp)
-      008173 F7               [ 1]   82 	ld	(x), a
-                                     83 ;	user/tm1638.c: 26: tm1638.DataPin = DataPin;
-      008174 1E 07            [ 2]   84 	ldw	x, (0x07, sp)
-      008176 7B 11            [ 1]   85 	ld	a, (0x11, sp)
-      008178 E7 04            [ 1]   86 	ld	(0x0004, x), a
-                                     87 ;	user/tm1638.c: 27: tm1638.intensity = 4;
-      00817A 1E 07            [ 2]   88 	ldw	x, (0x07, sp)
-      00817C 1C 00 05         [ 2]   89 	addw	x, #0x0005
-      00817F 1F 01            [ 2]   90 	ldw	(0x01, sp), x
-      008181 1E 01            [ 2]   91 	ldw	x, (0x01, sp)
-      008183 A6 04            [ 1]   92 	ld	a, #0x04
-      008185 F7               [ 1]   93 	ld	(x), a
-                                     94 ;	user/tm1638.c: 28: tm1638.active = TRUE;
-      008186 1E 07            [ 2]   95 	ldw	x, (0x07, sp)
-      008188 1C 00 06         [ 2]   96 	addw	x, #0x0006
-      00818B 1F 05            [ 2]   97 	ldw	(0x05, sp), x
-      00818D 1E 05            [ 2]   98 	ldw	x, (0x05, sp)
-      00818F A6 01            [ 1]   99 	ld	a, #0x01
-      008191 F7               [ 1]  100 	ld	(x), a
-                                    101 ;	user/tm1638.c: 29: GPIO_Init(tm1638.displayPort, tm1638.StbPin | tm1638.ClkPin | tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
-      008192 7B 0F            [ 1]  102 	ld	a, (0x0f, sp)
-      008194 1A 10            [ 1]  103 	or	a, (0x10, sp)
-      008196 1A 11            [ 1]  104 	or	a, (0x11, sp)
-      008198 1E 07            [ 2]  105 	ldw	x, (0x07, sp)
-      00819A FE               [ 2]  106 	ldw	x, (x)
-      00819B 4B B0            [ 1]  107 	push	#0xb0
-      00819D 88               [ 1]  108 	push	a
-      00819E 89               [ 2]  109 	pushw	x
-      00819F CD 88 6B         [ 4]  110 	call	_GPIO_Init
-      0081A2 5B 04            [ 2]  111 	addw	sp, #4
-                                    112 ;	user/tm1638.c: 30: Set(tm1638.StbPin);
-      0081A4 1E 03            [ 2]  113 	ldw	x, (0x03, sp)
-      0081A6 F6               [ 1]  114 	ld	a, (x)
-      0081A7 1E 07            [ 2]  115 	ldw	x, (0x07, sp)
-      0081A9 FE               [ 2]  116 	ldw	x, (x)
-      0081AA 88               [ 1]  117 	push	a
-      0081AB 89               [ 2]  118 	pushw	x
-      0081AC CD 88 FF         [ 4]  119 	call	_GPIO_WriteHigh
-      0081AF 5B 03            [ 2]  120 	addw	sp, #3
-                                    121 ;	user/tm1638.c: 31: Set(tm1638.ClkPin);
-      0081B1 1E 09            [ 2]  122 	ldw	x, (0x09, sp)
-      0081B3 F6               [ 1]  123 	ld	a, (x)
-      0081B4 1E 07            [ 2]  124 	ldw	x, (0x07, sp)
-      0081B6 FE               [ 2]  125 	ldw	x, (x)
-      0081B7 88               [ 1]  126 	push	a
-      0081B8 89               [ 2]  127 	pushw	x
-      0081B9 CD 88 FF         [ 4]  128 	call	_GPIO_WriteHigh
-      0081BC 5B 03            [ 2]  129 	addw	sp, #3
-                                    130 ;	user/tm1638.c: 32: writeCmd(0x40); // send cmd write data
-      0081BE 4B 40            [ 1]  131 	push	#0x40
-      0081C0 CD 82 D1         [ 4]  132 	call	_writeCmd
-      0081C3 84               [ 1]  133 	pop	a
-                                    134 ;	user/tm1638.c: 33: writeCmd(0x80|tm1638.active ? 8 : 0| tm1638.intensity); //display and brightness = 4
-      0081C4 1E 05            [ 2]  135 	ldw	x, (0x05, sp)
-      0081C6 F6               [ 1]  136 	ld	a, (x)
-      0081C7 AA 80            [ 1]  137 	or	a, #0x80
-      0081C9 4D               [ 1]  138 	tnz	a
-      0081CA 27 04            [ 1]  139 	jreq	00106$
-      0081CC A6 08            [ 1]  140 	ld	a, #0x08
-      0081CE 20 03            [ 2]  141 	jra	00107$
-      0081D0                        142 00106$:
-      0081D0 1E 01            [ 2]  143 	ldw	x, (0x01, sp)
-      0081D2 F6               [ 1]  144 	ld	a, (x)
-      0081D3                        145 00107$:
-      0081D3 88               [ 1]  146 	push	a
-      0081D4 CD 82 D1         [ 4]  147 	call	_writeCmd
-      0081D7 84               [ 1]  148 	pop	a
-                                    149 ;	user/tm1638.c: 34: Reset(tm1638.StbPin);
-      0081D8 1E 03            [ 2]  150 	ldw	x, (0x03, sp)
-      0081DA F6               [ 1]  151 	ld	a, (x)
-      0081DB 1E 07            [ 2]  152 	ldw	x, (0x07, sp)
-      0081DD FE               [ 2]  153 	ldw	x, (x)
-      0081DE 88               [ 1]  154 	push	a
-      0081DF 89               [ 2]  155 	pushw	x
-      0081E0 CD 89 06         [ 4]  156 	call	_GPIO_WriteLow
-      0081E3 5B 03            [ 2]  157 	addw	sp, #3
-                                    158 ;	user/tm1638.c: 35: writeByte(0xC0);
-      0081E5 4B C0            [ 1]  159 	push	#0xc0
-      0081E7 CD 82 07         [ 4]  160 	call	_writeByte
-      0081EA 84               [ 1]  161 	pop	a
-                                    162 ;	user/tm1638.c: 36: for(i = 0; i < 16; i++)
-      0081EB 4F               [ 1]  163 	clr	a
-      0081EC                        164 00102$:
-                                    165 ;	user/tm1638.c: 37: writeByte(0x00);
-      0081EC 88               [ 1]  166 	push	a
-      0081ED 4B 00            [ 1]  167 	push	#0x00
-      0081EF CD 82 07         [ 4]  168 	call	_writeByte
-      0081F2 84               [ 1]  169 	pop	a
-      0081F3 84               [ 1]  170 	pop	a
-                                    171 ;	user/tm1638.c: 36: for(i = 0; i < 16; i++)
-      0081F4 4C               [ 1]  172 	inc	a
-      0081F5 A1 10            [ 1]  173 	cp	a, #0x10
-      0081F7 25 F3            [ 1]  174 	jrc	00102$
-                                    175 ;	user/tm1638.c: 38: Set(tm1638.StbPin);
-      0081F9 1E 03            [ 2]  176 	ldw	x, (0x03, sp)
-      0081FB F6               [ 1]  177 	ld	a, (x)
-      0081FC 1E 07            [ 2]  178 	ldw	x, (0x07, sp)
-      0081FE FE               [ 2]  179 	ldw	x, (x)
-      0081FF 88               [ 1]  180 	push	a
-      008200 89               [ 2]  181 	pushw	x
-      008201 CD 88 FF         [ 4]  182 	call	_GPIO_WriteHigh
-      008204 5B 0D            [ 2]  183 	addw	sp, #13
-      008206 81               [ 4]  184 	ret
-                                    185 ;	user/tm1638.c: 41: static void writeByte(uint8_t byte)
-                                    186 ;	-----------------------------------------
-                                    187 ;	 function writeByte
-                                    188 ;	-----------------------------------------
-      008207                        189 _writeByte:
-      008207 52 05            [ 2]  190 	sub	sp, #5
-                                    191 ;	user/tm1638.c: 44: for(i = 0; i < 8; i++)
-      008209 AE 00 01         [ 2]  192 	ldw	x, #_tm1638+0
-      00820C 1F 04            [ 2]  193 	ldw	(0x04, sp), x
-      00820E 1E 04            [ 2]  194 	ldw	x, (0x04, sp)
-      008210 1C 00 03         [ 2]  195 	addw	x, #0x0003
-      008213 1F 02            [ 2]  196 	ldw	(0x02, sp), x
-      008215 0F 01            [ 1]  197 	clr	(0x01, sp)
-      008217                        198 00105$:
-                                    199 ;	user/tm1638.c: 46: Reset(tm1638.ClkPin); //input Data at rising edge of the clock
-      008217 1E 02            [ 2]  200 	ldw	x, (0x02, sp)
-      008219 F6               [ 1]  201 	ld	a, (x)
-      00821A 1E 04            [ 2]  202 	ldw	x, (0x04, sp)
-      00821C FE               [ 2]  203 	ldw	x, (x)
-      00821D 88               [ 1]  204 	push	a
-      00821E 89               [ 2]  205 	pushw	x
-      00821F CD 89 06         [ 4]  206 	call	_GPIO_WriteLow
-      008222 5B 03            [ 2]  207 	addw	sp, #3
-      008224 1E 04            [ 2]  208 	ldw	x, (0x04, sp)
-      008226 FE               [ 2]  209 	ldw	x, (x)
-                                    210 ;	user/tm1638.c: 47: if(byte&0x01) Set(tm1638.DataPin);
-      008227 16 04            [ 2]  211 	ldw	y, (0x04, sp)
-      008229 90 E6 04         [ 1]  212 	ld	a, (0x4, y)
-      00822C 88               [ 1]  213 	push	a
-      00822D 7B 09            [ 1]  214 	ld	a, (0x09, sp)
-      00822F 44               [ 1]  215 	srl	a
-      008230 84               [ 1]  216 	pop	a
-      008231 24 09            [ 1]  217 	jrnc	00102$
-      008233 88               [ 1]  218 	push	a
-      008234 89               [ 2]  219 	pushw	x
-      008235 CD 88 FF         [ 4]  220 	call	_GPIO_WriteHigh
-      008238 5B 03            [ 2]  221 	addw	sp, #3
-      00823A 20 07            [ 2]  222 	jra	00103$
-      00823C                        223 00102$:
-                                    224 ;	user/tm1638.c: 48: else Reset(tm1638.DataPin);
-      00823C 88               [ 1]  225 	push	a
-      00823D 89               [ 2]  226 	pushw	x
-      00823E CD 89 06         [ 4]  227 	call	_GPIO_WriteLow
-      008241 5B 03            [ 2]  228 	addw	sp, #3
-      008243                        229 00103$:
-                                    230 ;	user/tm1638.c: 49: byte>>=1;
-      008243 04 08            [ 1]  231 	srl	(0x08, sp)
-                                    232 ;	user/tm1638.c: 50: Set(tm1638.ClkPin);
-      008245 1E 02            [ 2]  233 	ldw	x, (0x02, sp)
-      008247 F6               [ 1]  234 	ld	a, (x)
-      008248 1E 04            [ 2]  235 	ldw	x, (0x04, sp)
-      00824A FE               [ 2]  236 	ldw	x, (x)
-      00824B 88               [ 1]  237 	push	a
-      00824C 89               [ 2]  238 	pushw	x
-      00824D CD 88 FF         [ 4]  239 	call	_GPIO_WriteHigh
-      008250 5B 03            [ 2]  240 	addw	sp, #3
-                                    241 ;	user/tm1638.c: 44: for(i = 0; i < 8; i++)
-      008252 0C 01            [ 1]  242 	inc	(0x01, sp)
-      008254 7B 01            [ 1]  243 	ld	a, (0x01, sp)
-      008256 A1 08            [ 1]  244 	cp	a, #0x08
-      008258 25 BD            [ 1]  245 	jrc	00105$
-      00825A 5B 05            [ 2]  246 	addw	sp, #5
-      00825C 81               [ 4]  247 	ret
-                                    248 ;	user/tm1638.c: 54: static uint8_t readByte(void)
-                                    249 ;	-----------------------------------------
-                                    250 ;	 function readByte
-                                    251 ;	-----------------------------------------
-      00825D                        252 _readByte:
-      00825D 52 08            [ 2]  253 	sub	sp, #8
-                                    254 ;	user/tm1638.c: 57: uint8_t temp = 0x00;
-      00825F 0F 01            [ 1]  255 	clr	(0x01, sp)
-                                    256 ;	user/tm1638.c: 58: GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_IN_PU_NO_IT);
-      008261 AE 00 01         [ 2]  257 	ldw	x, #_tm1638+0
-      008264 1F 07            [ 2]  258 	ldw	(0x07, sp), x
-      008266 1E 07            [ 2]  259 	ldw	x, (0x07, sp)
-      008268 1C 00 04         [ 2]  260 	addw	x, #0x0004
-      00826B 1F 05            [ 2]  261 	ldw	(0x05, sp), x
-      00826D 1E 05            [ 2]  262 	ldw	x, (0x05, sp)
-      00826F F6               [ 1]  263 	ld	a, (x)
-      008270 1E 07            [ 2]  264 	ldw	x, (0x07, sp)
-      008272 FE               [ 2]  265 	ldw	x, (x)
-      008273 4B 40            [ 1]  266 	push	#0x40
-      008275 88               [ 1]  267 	push	a
-      008276 89               [ 2]  268 	pushw	x
-      008277 CD 88 6B         [ 4]  269 	call	_GPIO_Init
-      00827A 5B 04            [ 2]  270 	addw	sp, #4
-                                    271 ;	user/tm1638.c: 59: Set(tm1638.DataPin);
-      00827C 1E 05            [ 2]  272 	ldw	x, (0x05, sp)
-      00827E F6               [ 1]  273 	ld	a, (x)
-      00827F 1E 07            [ 2]  274 	ldw	x, (0x07, sp)
-      008281 FE               [ 2]  275 	ldw	x, (x)
-      008282 88               [ 1]  276 	push	a
-      008283 89               [ 2]  277 	pushw	x
-      008284 CD 88 FF         [ 4]  278 	call	_GPIO_WriteHigh
-      008287 5B 03            [ 2]  279 	addw	sp, #3
-                                    280 ;	user/tm1638.c: 60: for(i = 0; i < 8; i++)
-      008289 1E 07            [ 2]  281 	ldw	x, (0x07, sp)
-      00828B 1C 00 03         [ 2]  282 	addw	x, #0x0003
-      00828E 1F 03            [ 2]  283 	ldw	(0x03, sp), x
-      008290 0F 02            [ 1]  284 	clr	(0x02, sp)
-      008292                        285 00104$:
-                                    286 ;	user/tm1638.c: 62: Set(tm1638.ClkPin); //Output Data at falling edge of the clock
-      008292 1E 03            [ 2]  287 	ldw	x, (0x03, sp)
-      008294 F6               [ 1]  288 	ld	a, (x)
-      008295 1E 07            [ 2]  289 	ldw	x, (0x07, sp)
-      008297 FE               [ 2]  290 	ldw	x, (x)
-      008298 88               [ 1]  291 	push	a
-      008299 89               [ 2]  292 	pushw	x
-      00829A CD 88 FF         [ 4]  293 	call	_GPIO_WriteHigh
-      00829D 5B 03            [ 2]  294 	addw	sp, #3
-                                    295 ;	user/tm1638.c: 63: temp>>=1;
-      00829F 04 01            [ 1]  296 	srl	(0x01, sp)
-                                    297 ;	user/tm1638.c: 64: if(Get(tm1638.DataPin)) temp |= 0x80;
-      0082A1 1E 05            [ 2]  298 	ldw	x, (0x05, sp)
-      0082A3 F6               [ 1]  299 	ld	a, (x)
-      0082A4 88               [ 1]  300 	push	a
-      0082A5 4B 0A            [ 1]  301 	push	#0x0a
-      0082A7 4B 50            [ 1]  302 	push	#0x50
-      0082A9 CD 89 24         [ 4]  303 	call	_GPIO_ReadInputPin
-      0082AC 5B 03            [ 2]  304 	addw	sp, #3
-      0082AE 4D               [ 1]  305 	tnz	a
-      0082AF 27 06            [ 1]  306 	jreq	00102$
-      0082B1 7B 01            [ 1]  307 	ld	a, (0x01, sp)
-      0082B3 AA 80            [ 1]  308 	or	a, #0x80
-      0082B5 6B 01            [ 1]  309 	ld	(0x01, sp), a
-      0082B7                        310 00102$:
-                                    311 ;	user/tm1638.c: 65: Reset(tm1638.ClkPin);
-      0082B7 1E 03            [ 2]  312 	ldw	x, (0x03, sp)
-      0082B9 F6               [ 1]  313 	ld	a, (x)
-      0082BA 1E 07            [ 2]  314 	ldw	x, (0x07, sp)
-      0082BC FE               [ 2]  315 	ldw	x, (x)
-      0082BD 88               [ 1]  316 	push	a
-      0082BE 89               [ 2]  317 	pushw	x
-      0082BF CD 89 06         [ 4]  318 	call	_GPIO_WriteLow
-      0082C2 5B 03            [ 2]  319 	addw	sp, #3
-                                    320 ;	user/tm1638.c: 60: for(i = 0; i < 8; i++)
-      0082C4 0C 02            [ 1]  321 	inc	(0x02, sp)
-      0082C6 7B 02            [ 1]  322 	ld	a, (0x02, sp)
-      0082C8 A1 08            [ 1]  323 	cp	a, #0x08
-      0082CA 25 C6            [ 1]  324 	jrc	00104$
-                                    325 ;	user/tm1638.c: 67: return temp;
-      0082CC 7B 01            [ 1]  326 	ld	a, (0x01, sp)
-      0082CE 5B 08            [ 2]  327 	addw	sp, #8
-      0082D0 81               [ 4]  328 	ret
-                                    329 ;	user/tm1638.c: 70: static void writeCmd(uint8_t cmd)
-                                    330 ;	-----------------------------------------
-                                    331 ;	 function writeCmd
-                                    332 ;	-----------------------------------------
-      0082D1                        333 _writeCmd:
-      0082D1 89               [ 2]  334 	pushw	x
-                                    335 ;	user/tm1638.c: 72: Set(tm1638.StbPin); 
-      0082D2 AE 00 01         [ 2]  336 	ldw	x, #_tm1638+0
-      0082D5 1F 01            [ 2]  337 	ldw	(0x01, sp), x
-      0082D7 1E 01            [ 2]  338 	ldw	x, (0x01, sp)
-      0082D9 5C               [ 2]  339 	incw	x
-      0082DA 5C               [ 2]  340 	incw	x
-      0082DB F6               [ 1]  341 	ld	a, (x)
-      0082DC 16 01            [ 2]  342 	ldw	y, (0x01, sp)
-      0082DE 90 FE            [ 2]  343 	ldw	y, (y)
-      0082E0 89               [ 2]  344 	pushw	x
-      0082E1 88               [ 1]  345 	push	a
-      0082E2 90 89            [ 2]  346 	pushw	y
-      0082E4 CD 88 FF         [ 4]  347 	call	_GPIO_WriteHigh
-      0082E7 5B 03            [ 2]  348 	addw	sp, #3
-      0082E9 85               [ 2]  349 	popw	x
-                                    350 ;	user/tm1638.c: 73: Reset(tm1638.StbPin); // falling edge STB is an instruction
-      0082EA F6               [ 1]  351 	ld	a, (x)
-      0082EB 1E 01            [ 2]  352 	ldw	x, (0x01, sp)
-      0082ED FE               [ 2]  353 	ldw	x, (x)
-      0082EE 88               [ 1]  354 	push	a
-      0082EF 89               [ 2]  355 	pushw	x
-      0082F0 CD 89 06         [ 4]  356 	call	_GPIO_WriteLow
-      0082F3 5B 03            [ 2]  357 	addw	sp, #3
-                                    358 ;	user/tm1638.c: 74: writeByte(cmd); // Send command
-      0082F5 7B 05            [ 1]  359 	ld	a, (0x05, sp)
-      0082F7 88               [ 1]  360 	push	a
-      0082F8 CD 82 07         [ 4]  361 	call	_writeByte
-      0082FB 84               [ 1]  362 	pop	a
-      0082FC 85               [ 2]  363 	popw	x
-      0082FD 81               [ 4]  364 	ret
-                                    365 ;	user/tm1638.c: 78: static void writeData(uint8_t addr, uint8_t data)
-                                    366 ;	-----------------------------------------
-                                    367 ;	 function writeData
-                                    368 ;	-----------------------------------------
-      0082FE                        369 _writeData:
-                                    370 ;	user/tm1638.c: 80: writeCmd(0x44); //Setting Data (B7B6: 01): Normal Mode, Fixed addr, Write data
-      0082FE 4B 44            [ 1]  371 	push	#0x44
-      008300 CD 82 D1         [ 4]  372 	call	_writeCmd
-      008303 84               [ 1]  373 	pop	a
-                                    374 ;	user/tm1638.c: 81: writeCmd(0xC0|addr); //Setting Address (B7B6: 11): Display addr: 00H-0FH
-      008304 7B 03            [ 1]  375 	ld	a, (0x03, sp)
-      008306 AA C0            [ 1]  376 	or	a, #0xc0
-      008308 88               [ 1]  377 	push	a
-      008309 CD 82 D1         [ 4]  378 	call	_writeCmd
-      00830C 84               [ 1]  379 	pop	a
-                                    380 ;	user/tm1638.c: 82: writeByte(data); // Send Data
-      00830D 7B 04            [ 1]  381 	ld	a, (0x04, sp)
-      00830F 88               [ 1]  382 	push	a
-      008310 CD 82 07         [ 4]  383 	call	_writeByte
-      008313 84               [ 1]  384 	pop	a
-      008314 81               [ 4]  385 	ret
-                                    386 ;	user/tm1638.c: 86: void sendChar(uint8_t pos, uint8_t data, bool dot)
-                                    387 ;	-----------------------------------------
-                                    388 ;	 function sendChar
-                                    389 ;	-----------------------------------------
-      008315                        390 _sendChar:
-                                    391 ;	user/tm1638.c: 88: writeData(pos << 1, data | dot ? 0x80: 0x00);
-      008315 7B 04            [ 1]  392 	ld	a, (0x04, sp)
-      008317 1A 05            [ 1]  393 	or	a, (0x05, sp)
-      008319 4D               [ 1]  394 	tnz	a
-      00831A 27 03            [ 1]  395 	jreq	00103$
-      00831C A6 80            [ 1]  396 	ld	a, #0x80
-      00831E 21                     397 	.byte 0x21
-      00831F                        398 00103$:
-      00831F 4F               [ 1]  399 	clr	a
-      008320                        400 00104$:
-      008320 41               [ 1]  401 	exg	a, xl
-      008321 7B 03            [ 1]  402 	ld	a, (0x03, sp)
-      008323 41               [ 1]  403 	exg	a, xl
-      008324 58               [ 2]  404 	sllw	x
-      008325 88               [ 1]  405 	push	a
-      008326 9F               [ 1]  406 	ld	a, xl
-      008327 88               [ 1]  407 	push	a
-      008328 CD 82 FE         [ 4]  408 	call	_writeData
-      00832B 85               [ 2]  409 	popw	x
-      00832C 81               [ 4]  410 	ret
-                                    411 ;	user/tm1638.c: 91: void configDisplay(bool active, uint8_t intensity)
-                                    412 ;	-----------------------------------------
-                                    413 ;	 function configDisplay
-                                    414 ;	-----------------------------------------
-      00832D                        415 _configDisplay:
-      00832D 52 04            [ 2]  416 	sub	sp, #4
-                                    417 ;	user/tm1638.c: 93: tm1638.intensity = intensity;
-      00832F AE 00 01         [ 2]  418 	ldw	x, #_tm1638+0
-      008332 1F 01            [ 2]  419 	ldw	(0x01, sp), x
-      008334 1E 01            [ 2]  420 	ldw	x, (0x01, sp)
-      008336 1C 00 05         [ 2]  421 	addw	x, #0x0005
-      008339 7B 08            [ 1]  422 	ld	a, (0x08, sp)
-      00833B F7               [ 1]  423 	ld	(x), a
-                                    424 ;	user/tm1638.c: 94: tm1638.active = active;
-      00833C 16 01            [ 2]  425 	ldw	y, (0x01, sp)
-      00833E 72 A9 00 06      [ 2]  426 	addw	y, #0x0006
-      008342 7B 07            [ 1]  427 	ld	a, (0x07, sp)
-      008344 90 F7            [ 1]  428 	ld	(y), a
-                                    429 ;	user/tm1638.c: 95: writeCmd(0x80|tm1638.active ? 8 : 0 | tm1638.intensity); //Display control (B7B6: 10): B3: 1: enable, 0: disable; B2B1B0: 0-7: brighness
-      008346 7B 07            [ 1]  430 	ld	a, (0x07, sp)
-      008348 AA 80            [ 1]  431 	or	a, #0x80
-      00834A 4D               [ 1]  432 	tnz	a
-      00834B 27 04            [ 1]  433 	jreq	00103$
-      00834D A6 08            [ 1]  434 	ld	a, #0x08
-      00834F 20 01            [ 2]  435 	jra	00104$
-      008351                        436 00103$:
-      008351 F6               [ 1]  437 	ld	a, (x)
-      008352                        438 00104$:
-      008352 88               [ 1]  439 	push	a
-      008353 CD 82 D1         [ 4]  440 	call	_writeCmd
-      008356 84               [ 1]  441 	pop	a
-                                    442 ;	user/tm1638.c: 96: Reset(tm1638.StbPin);
-      008357 1E 01            [ 2]  443 	ldw	x, (0x01, sp)
-      008359 5C               [ 2]  444 	incw	x
-      00835A 5C               [ 2]  445 	incw	x
-      00835B 1F 03            [ 2]  446 	ldw	(0x03, sp), x
-      00835D 1E 03            [ 2]  447 	ldw	x, (0x03, sp)
-      00835F F6               [ 1]  448 	ld	a, (x)
-      008360 1E 01            [ 2]  449 	ldw	x, (0x01, sp)
-      008362 FE               [ 2]  450 	ldw	x, (x)
-      008363 88               [ 1]  451 	push	a
-      008364 89               [ 2]  452 	pushw	x
-      008365 CD 89 06         [ 4]  453 	call	_GPIO_WriteLow
-      008368 5B 03            [ 2]  454 	addw	sp, #3
-                                    455 ;	user/tm1638.c: 97: Reset(tm1638.ClkPin);
-      00836A 1E 01            [ 2]  456 	ldw	x, (0x01, sp)
-      00836C 1C 00 03         [ 2]  457 	addw	x, #0x0003
-      00836F F6               [ 1]  458 	ld	a, (x)
-      008370 16 01            [ 2]  459 	ldw	y, (0x01, sp)
-      008372 90 FE            [ 2]  460 	ldw	y, (y)
-      008374 89               [ 2]  461 	pushw	x
-      008375 88               [ 1]  462 	push	a
-      008376 90 89            [ 2]  463 	pushw	y
-      008378 CD 89 06         [ 4]  464 	call	_GPIO_WriteLow
-      00837B 5B 03            [ 2]  465 	addw	sp, #3
-      00837D 85               [ 2]  466 	popw	x
-                                    467 ;	user/tm1638.c: 98: Set(tm1638.ClkPin);
-      00837E F6               [ 1]  468 	ld	a, (x)
-      00837F 1E 01            [ 2]  469 	ldw	x, (0x01, sp)
-      008381 FE               [ 2]  470 	ldw	x, (x)
-      008382 88               [ 1]  471 	push	a
-      008383 89               [ 2]  472 	pushw	x
-      008384 CD 88 FF         [ 4]  473 	call	_GPIO_WriteHigh
-      008387 5B 03            [ 2]  474 	addw	sp, #3
-                                    475 ;	user/tm1638.c: 99: Set(tm1638.StbPin);
-      008389 1E 03            [ 2]  476 	ldw	x, (0x03, sp)
-      00838B F6               [ 1]  477 	ld	a, (x)
-      00838C 1E 01            [ 2]  478 	ldw	x, (0x01, sp)
-      00838E FE               [ 2]  479 	ldw	x, (x)
-      00838F 88               [ 1]  480 	push	a
-      008390 89               [ 2]  481 	pushw	x
-      008391 CD 88 FF         [ 4]  482 	call	_GPIO_WriteHigh
-      008394 5B 07            [ 2]  483 	addw	sp, #7
-      008396 81               [ 4]  484 	ret
-                                    485 ;	user/tm1638.c: 102: void setDisplayDigit(uint8_t digit, uint8_t pos, bool dot, const uint8_t numberFont[])
-                                    486 ;	-----------------------------------------
-                                    487 ;	 function setDisplayDigit
-                                    488 ;	-----------------------------------------
-      008397                        489 _setDisplayDigit:
-                                    490 ;	user/tm1638.c: 104: sendChar(pos, numberFont[digit & 0xF], dot);
-      008397 7B 03            [ 1]  491 	ld	a, (0x03, sp)
-      008399 A4 0F            [ 1]  492 	and	a, #0x0f
-      00839B 5F               [ 1]  493 	clrw	x
-      00839C 97               [ 1]  494 	ld	xl, a
-      00839D 72 FB 06         [ 2]  495 	addw	x, (0x06, sp)
-      0083A0 F6               [ 1]  496 	ld	a, (x)
-      0083A1 97               [ 1]  497 	ld	xl, a
-      0083A2 7B 05            [ 1]  498 	ld	a, (0x05, sp)
-      0083A4 88               [ 1]  499 	push	a
-      0083A5 9F               [ 1]  500 	ld	a, xl
-      0083A6 88               [ 1]  501 	push	a
-      0083A7 7B 06            [ 1]  502 	ld	a, (0x06, sp)
-      0083A9 88               [ 1]  503 	push	a
-      0083AA CD 83 15         [ 4]  504 	call	_sendChar
-      0083AD 5B 03            [ 2]  505 	addw	sp, #3
-      0083AF 81               [ 4]  506 	ret
-                                    507 ;	user/tm1638.c: 107: void clearDisplayDigit(uint8_t pos, bool dot)
-                                    508 ;	-----------------------------------------
-                                    509 ;	 function clearDisplayDigit
-                                    510 ;	-----------------------------------------
-      0083B0                        511 _clearDisplayDigit:
-                                    512 ;	user/tm1638.c: 109: sendChar(pos, 0, dot);
-      0083B0 7B 04            [ 1]  513 	ld	a, (0x04, sp)
-      0083B2 88               [ 1]  514 	push	a
-      0083B3 4B 00            [ 1]  515 	push	#0x00
-      0083B5 7B 05            [ 1]  516 	ld	a, (0x05, sp)
-      0083B7 88               [ 1]  517 	push	a
-      0083B8 CD 83 15         [ 4]  518 	call	_sendChar
-      0083BB 5B 03            [ 2]  519 	addw	sp, #3
-      0083BD 81               [ 4]  520 	ret
-                                    521 ;	user/tm1638.c: 112: void setDisplay(const uint8_t values[], uint8_t size)
-                                    522 ;	-----------------------------------------
-                                    523 ;	 function setDisplay
-                                    524 ;	-----------------------------------------
-      0083BE                        525 _setDisplay:
-                                    526 ;	user/tm1638.c: 115: for(i = 0; i<size; i++) 
-      0083BE 4F               [ 1]  527 	clr	a
-      0083BF                        528 00103$:
-      0083BF 11 05            [ 1]  529 	cp	a, (0x05, sp)
-      0083C1 25 01            [ 1]  530 	jrc	00116$
-      0083C3 81               [ 4]  531 	ret
-      0083C4                        532 00116$:
-                                    533 ;	user/tm1638.c: 116: sendChar(i, values[i], 0);
-      0083C4 5F               [ 1]  534 	clrw	x
-      0083C5 97               [ 1]  535 	ld	xl, a
-      0083C6 72 FB 03         [ 2]  536 	addw	x, (0x03, sp)
-      0083C9 88               [ 1]  537 	push	a
-      0083CA F6               [ 1]  538 	ld	a, (x)
-      0083CB 97               [ 1]  539 	ld	xl, a
-      0083CC 84               [ 1]  540 	pop	a
-      0083CD 88               [ 1]  541 	push	a
-      0083CE 4B 00            [ 1]  542 	push	#0x00
-      0083D0 89               [ 2]  543 	pushw	x
-      0083D1 5B 01            [ 2]  544 	addw	sp, #1
-      0083D3 88               [ 1]  545 	push	a
-      0083D4 CD 83 15         [ 4]  546 	call	_sendChar
-      0083D7 5B 03            [ 2]  547 	addw	sp, #3
-      0083D9 84               [ 1]  548 	pop	a
-                                    549 ;	user/tm1638.c: 115: for(i = 0; i<size; i++) 
-      0083DA 4C               [ 1]  550 	inc	a
-      0083DB 20 E2            [ 2]  551 	jra	00103$
-      0083DD 81               [ 4]  552 	ret
-                                    553 ;	user/tm1638.c: 119: void clearDisplay(void)
-                                    554 ;	-----------------------------------------
-                                    555 ;	 function clearDisplay
-                                    556 ;	-----------------------------------------
-      0083DE                        557 _clearDisplay:
-                                    558 ;	user/tm1638.c: 122: for(i = 0; i < 8; i++)
-      0083DE 4F               [ 1]  559 	clr	a
-      0083DF                        560 00102$:
-                                    561 ;	user/tm1638.c: 123: writeData(i << 1, 0);
-      0083DF 97               [ 1]  562 	ld	xl, a
-      0083E0 58               [ 2]  563 	sllw	x
-      0083E1 88               [ 1]  564 	push	a
-      0083E2 4B 00            [ 1]  565 	push	#0x00
-      0083E4 89               [ 2]  566 	pushw	x
-      0083E5 5B 01            [ 2]  567 	addw	sp, #1
-      0083E7 CD 82 FE         [ 4]  568 	call	_writeData
-      0083EA 85               [ 2]  569 	popw	x
-      0083EB 84               [ 1]  570 	pop	a
-                                    571 ;	user/tm1638.c: 122: for(i = 0; i < 8; i++)
-      0083EC 4C               [ 1]  572 	inc	a
-      0083ED A1 08            [ 1]  573 	cp	a, #0x08
-      0083EF 25 EE            [ 1]  574 	jrc	00102$
-      0083F1 81               [ 4]  575 	ret
-                                    576 ;	user/tm1638.c: 147: void TM1638_SendData(uint8_t i, char *str)
-                                    577 ;	-----------------------------------------
-                                    578 ;	 function TM1638_SendData
-                                    579 ;	-----------------------------------------
-      0083F2                        580 _TM1638_SendData:
-      0083F2 52 10            [ 2]  581 	sub	sp, #16
-      0083F4 AE 84 A7         [ 2]  582 	ldw	x, #_tm_dat+0
-      0083F7 1F 0C            [ 2]  583 	ldw	(0x0c, sp), x
-      0083F9 AE 84 C3         [ 2]  584 	ldw	x, #_tm_dat+28
-      0083FC 1F 0F            [ 2]  585 	ldw	(0x0f, sp), x
-      0083FE 7B 13            [ 1]  586 	ld	a, (0x13, sp)
-      008400 6B 0E            [ 1]  587 	ld	(0x0e, sp), a
-      008402                        588 00115$:
-                                    589 ;	user/tm1638.c: 151: for(; i<8; i++)
-      008402 7B 0E            [ 1]  590 	ld	a, (0x0e, sp)
-      008404 A1 08            [ 1]  591 	cp	a, #0x08
-      008406 25 03            [ 1]  592 	jrc	00148$
-      008408 CC 84 91         [ 2]  593 	jp	00117$
-      00840B                        594 00148$:
-                                    595 ;	user/tm1638.c: 153: k = 0;
-      00840B 0F 02            [ 1]  596 	clr	(0x02, sp)
-                                    597 ;	user/tm1638.c: 154: for(j = 0; j < 14; j++)
-      00840D 16 14            [ 2]  598 	ldw	y, (0x14, sp)
-      00840F 17 0A            [ 2]  599 	ldw	(0x0a, sp), y
-      008411 0F 03            [ 1]  600 	clr	(0x03, sp)
-      008413                        601 00112$:
-                                    602 ;	user/tm1638.c: 156: if(*str == tm_dat[0][j])
-      008413 1E 0A            [ 2]  603 	ldw	x, (0x0a, sp)
-      008415 F6               [ 1]  604 	ld	a, (x)
-      008416 90 97            [ 1]  605 	ld	yl, a
-      008418 7B 03            [ 1]  606 	ld	a, (0x03, sp)
-      00841A 48               [ 1]  607 	sll	a
-      00841B 6B 09            [ 1]  608 	ld	(0x09, sp), a
-      00841D 5F               [ 1]  609 	clrw	x
-      00841E 7B 09            [ 1]  610 	ld	a, (0x09, sp)
-      008420 97               [ 1]  611 	ld	xl, a
-      008421 72 FB 0C         [ 2]  612 	addw	x, (0x0c, sp)
-      008424 FE               [ 2]  613 	ldw	x, (x)
-      008425 1F 07            [ 2]  614 	ldw	(0x07, sp), x
-      008427 4F               [ 1]  615 	clr	a
-      008428 90 95            [ 1]  616 	ld	yh, a
-      00842A 93               [ 1]  617 	ldw	x, y
-      00842B 13 07            [ 2]  618 	cpw	x, (0x07, sp)
-      00842D 26 11            [ 1]  619 	jrne	00113$
-                                    620 ;	user/tm1638.c: 158: chr = tm_dat[1][j];
-      00842F 5F               [ 1]  621 	clrw	x
-      008430 7B 09            [ 1]  622 	ld	a, (0x09, sp)
-      008432 97               [ 1]  623 	ld	xl, a
-      008433 72 FB 0F         [ 2]  624 	addw	x, (0x0f, sp)
-      008436 FE               [ 2]  625 	ldw	x, (x)
-      008437 9F               [ 1]  626 	ld	a, xl
-      008438 6B 01            [ 1]  627 	ld	(0x01, sp), a
-                                    628 ;	user/tm1638.c: 159: k = 1;
-      00843A A6 01            [ 1]  629 	ld	a, #0x01
-      00843C 6B 02            [ 1]  630 	ld	(0x02, sp), a
-                                    631 ;	user/tm1638.c: 160: break;
-      00843E 20 08            [ 2]  632 	jra	00103$
-      008440                        633 00113$:
-                                    634 ;	user/tm1638.c: 154: for(j = 0; j < 14; j++)
-      008440 0C 03            [ 1]  635 	inc	(0x03, sp)
-      008442 7B 03            [ 1]  636 	ld	a, (0x03, sp)
-      008444 A1 0E            [ 1]  637 	cp	a, #0x0e
-      008446 25 CB            [ 1]  638 	jrc	00112$
-      008448                        639 00103$:
-                                    640 ;	user/tm1638.c: 163: if(k == 0)
-      008448 0D 02            [ 1]  641 	tnz	(0x02, sp)
-      00844A 26 02            [ 1]  642 	jrne	00105$
-                                    643 ;	user/tm1638.c: 165: chr = 0x00;
-      00844C 0F 01            [ 1]  644 	clr	(0x01, sp)
-      00844E                        645 00105$:
-                                    646 ;	user/tm1638.c: 167: if(*(str+1)=='.'){
-      00844E 1E 14            [ 2]  647 	ldw	x, (0x14, sp)
-      008450 5C               [ 2]  648 	incw	x
-      008451 1F 05            [ 2]  649 	ldw	(0x05, sp), x
-      008453 1E 05            [ 2]  650 	ldw	x, (0x05, sp)
-      008455 F6               [ 1]  651 	ld	a, (x)
-      008456 97               [ 1]  652 	ld	xl, a
-                                    653 ;	user/tm1638.c: 169: writeData(i*2,chr);
-      008457 7B 0E            [ 1]  654 	ld	a, (0x0e, sp)
-      008459 48               [ 1]  655 	sll	a
-      00845A 6B 04            [ 1]  656 	ld	(0x04, sp), a
-                                    657 ;	user/tm1638.c: 167: if(*(str+1)=='.'){
-      00845C 9F               [ 1]  658 	ld	a, xl
-      00845D A1 2E            [ 1]  659 	cp	a, #0x2e
-      00845F 26 16            [ 1]  660 	jrne	00107$
-                                    661 ;	user/tm1638.c: 168: chr|=0x80;
-      008461 7B 01            [ 1]  662 	ld	a, (0x01, sp)
-      008463 AA 80            [ 1]  663 	or	a, #0x80
-      008465 6B 01            [ 1]  664 	ld	(0x01, sp), a
-                                    665 ;	user/tm1638.c: 169: writeData(i*2,chr);
-      008467 7B 01            [ 1]  666 	ld	a, (0x01, sp)
-      008469 88               [ 1]  667 	push	a
-      00846A 7B 05            [ 1]  668 	ld	a, (0x05, sp)
-      00846C 88               [ 1]  669 	push	a
-      00846D CD 82 FE         [ 4]  670 	call	_writeData
-      008470 85               [ 2]  671 	popw	x
-                                    672 ;	user/tm1638.c: 170: str++;
-      008471 16 05            [ 2]  673 	ldw	y, (0x05, sp)
-      008473 17 14            [ 2]  674 	ldw	(0x14, sp), y
-      008475 20 0A            [ 2]  675 	jra	00108$
-      008477                        676 00107$:
-                                    677 ;	user/tm1638.c: 172: writeData(i*2,chr);
-      008477 7B 01            [ 1]  678 	ld	a, (0x01, sp)
-      008479 88               [ 1]  679 	push	a
-      00847A 7B 05            [ 1]  680 	ld	a, (0x05, sp)
-      00847C 88               [ 1]  681 	push	a
-      00847D CD 82 FE         [ 4]  682 	call	_writeData
-      008480 85               [ 2]  683 	popw	x
-      008481                        684 00108$:
-                                    685 ;	user/tm1638.c: 174: str++;
-      008481 1E 14            [ 2]  686 	ldw	x, (0x14, sp)
-      008483 5C               [ 2]  687 	incw	x
-      008484 1F 14            [ 2]  688 	ldw	(0x14, sp), x
-                                    689 ;	user/tm1638.c: 175: if(*str=='\0')break;
-      008486 1E 14            [ 2]  690 	ldw	x, (0x14, sp)
-      008488 F6               [ 1]  691 	ld	a, (x)
-      008489 4D               [ 1]  692 	tnz	a
-      00848A 27 05            [ 1]  693 	jreq	00117$
-                                    694 ;	user/tm1638.c: 151: for(; i<8; i++)
-      00848C 0C 0E            [ 1]  695 	inc	(0x0e, sp)
-      00848E CC 84 02         [ 2]  696 	jp	00115$
-      008491                        697 00117$:
-      008491 5B 10            [ 2]  698 	addw	sp, #16
-      008493 81               [ 4]  699 	ret
-                                    700 ;	user/tm1638.c: 179: void TM1638_SendIntData(uint8_t i, int num)
-                                    701 ;	-----------------------------------------
-                                    702 ;	 function TM1638_SendIntData
-                                    703 ;	-----------------------------------------
-      008494                        704 _TM1638_SendIntData:
-      008494 88               [ 1]  705 	push	a
-                                    706 ;	user/tm1638.c: 182: a = num + '0';
-      008495 7B 06            [ 1]  707 	ld	a, (0x06, sp)
-      008497 AB 30            [ 1]  708 	add	a, #0x30
-      008499 6B 01            [ 1]  709 	ld	(0x01, sp), a
-                                    710 ;	user/tm1638.c: 183: TM1638_SendData(i,&a);
-      00849B 96               [ 1]  711 	ldw	x, sp
-      00849C 5C               [ 2]  712 	incw	x
-      00849D 89               [ 2]  713 	pushw	x
-      00849E 7B 06            [ 1]  714 	ld	a, (0x06, sp)
-      0084A0 88               [ 1]  715 	push	a
-      0084A1 CD 83 F2         [ 4]  716 	call	_TM1638_SendData
-      0084A4 5B 04            [ 2]  717 	addw	sp, #4
-      0084A6 81               [ 4]  718 	ret
+                                     60 ;	 function TM1638_Init
+                                     61 ;	-----------------------------------------
+      0082DA                         62 _TM1638_Init:
+      0082DA 52 0B            [ 2]   63 	sub	sp, #11
+                                     64 ;	user/tm1638.c: 48: tm1638.displayPort = displayPort;
+      0082DC AE 00 10         [ 2]   65 	ldw	x, #_tm1638+0
+      0082DF 16 0E            [ 2]   66 	ldw	y, (0x0e, sp)
+      0082E1 FF               [ 2]   67 	ldw	(x), y
+                                     68 ;	user/tm1638.c: 49: tm1638.StbPin = StbPin;
+      0082E2 AE 00 10         [ 2]   69 	ldw	x, #_tm1638+0
+      0082E5 1F 0A            [ 2]   70 	ldw	(0x0a, sp), x
+      0082E7 1E 0A            [ 2]   71 	ldw	x, (0x0a, sp)
+      0082E9 5C               [ 2]   72 	incw	x
+      0082EA 5C               [ 2]   73 	incw	x
+      0082EB 1F 08            [ 2]   74 	ldw	(0x08, sp), x
+      0082ED 1E 08            [ 2]   75 	ldw	x, (0x08, sp)
+      0082EF 7B 10            [ 1]   76 	ld	a, (0x10, sp)
+      0082F1 F7               [ 1]   77 	ld	(x), a
+                                     78 ;	user/tm1638.c: 50: tm1638.ClkPin = ClkPin;
+      0082F2 1E 0A            [ 2]   79 	ldw	x, (0x0a, sp)
+      0082F4 1C 00 03         [ 2]   80 	addw	x, #0x0003
+      0082F7 1F 06            [ 2]   81 	ldw	(0x06, sp), x
+      0082F9 1E 06            [ 2]   82 	ldw	x, (0x06, sp)
+      0082FB 7B 11            [ 1]   83 	ld	a, (0x11, sp)
+      0082FD F7               [ 1]   84 	ld	(x), a
+                                     85 ;	user/tm1638.c: 51: tm1638.DataPin = DataPin;
+      0082FE 1E 0A            [ 2]   86 	ldw	x, (0x0a, sp)
+      008300 7B 12            [ 1]   87 	ld	a, (0x12, sp)
+      008302 E7 04            [ 1]   88 	ld	(0x0004, x), a
+                                     89 ;	user/tm1638.c: 52: tm1638.intensity = 4;
+      008304 1E 0A            [ 2]   90 	ldw	x, (0x0a, sp)
+      008306 1C 00 05         [ 2]   91 	addw	x, #0x0005
+      008309 1F 04            [ 2]   92 	ldw	(0x04, sp), x
+      00830B 1E 04            [ 2]   93 	ldw	x, (0x04, sp)
+      00830D A6 04            [ 1]   94 	ld	a, #0x04
+      00830F F7               [ 1]   95 	ld	(x), a
+                                     96 ;	user/tm1638.c: 53: tm1638.displays = 8;
+      008310 1E 0A            [ 2]   97 	ldw	x, (0x0a, sp)
+      008312 A6 08            [ 1]   98 	ld	a, #0x08
+      008314 E7 06            [ 1]   99 	ld	(0x0006, x), a
+                                    100 ;	user/tm1638.c: 54: tm1638.active = TRUE;
+      008316 1E 0A            [ 2]  101 	ldw	x, (0x0a, sp)
+      008318 1C 00 07         [ 2]  102 	addw	x, #0x0007
+      00831B 1F 02            [ 2]  103 	ldw	(0x02, sp), x
+      00831D 1E 02            [ 2]  104 	ldw	x, (0x02, sp)
+      00831F A6 01            [ 1]  105 	ld	a, #0x01
+      008321 F7               [ 1]  106 	ld	(x), a
+                                    107 ;	user/tm1638.c: 55: GPIO_Init(tm1638.displayPort, tm1638.StbPin | tm1638.ClkPin | tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
+      008322 7B 10            [ 1]  108 	ld	a, (0x10, sp)
+      008324 1A 11            [ 1]  109 	or	a, (0x11, sp)
+      008326 1A 12            [ 1]  110 	or	a, (0x12, sp)
+      008328 1E 0A            [ 2]  111 	ldw	x, (0x0a, sp)
+      00832A FE               [ 2]  112 	ldw	x, (x)
+      00832B 4B B0            [ 1]  113 	push	#0xb0
+      00832D 88               [ 1]  114 	push	a
+      00832E 89               [ 2]  115 	pushw	x
+      00832F CD 89 C8         [ 4]  116 	call	_GPIO_Init
+      008332 5B 04            [ 2]  117 	addw	sp, #4
+                                    118 ;	user/tm1638.c: 56: Set(tm1638.StbPin);
+      008334 1E 08            [ 2]  119 	ldw	x, (0x08, sp)
+      008336 F6               [ 1]  120 	ld	a, (x)
+      008337 1E 0A            [ 2]  121 	ldw	x, (0x0a, sp)
+      008339 FE               [ 2]  122 	ldw	x, (x)
+      00833A 88               [ 1]  123 	push	a
+      00833B 89               [ 2]  124 	pushw	x
+      00833C CD 8A 5C         [ 4]  125 	call	_GPIO_WriteHigh
+      00833F 5B 03            [ 2]  126 	addw	sp, #3
+                                    127 ;	user/tm1638.c: 57: Set(tm1638.ClkPin);
+      008341 1E 06            [ 2]  128 	ldw	x, (0x06, sp)
+      008343 F6               [ 1]  129 	ld	a, (x)
+      008344 1E 0A            [ 2]  130 	ldw	x, (0x0a, sp)
+      008346 FE               [ 2]  131 	ldw	x, (x)
+      008347 88               [ 1]  132 	push	a
+      008348 89               [ 2]  133 	pushw	x
+      008349 CD 8A 5C         [ 4]  134 	call	_GPIO_WriteHigh
+      00834C 5B 03            [ 2]  135 	addw	sp, #3
+                                    136 ;	user/tm1638.c: 58: writeCmd(0x40); // send cmd write data
+      00834E 4B 40            [ 1]  137 	push	#0x40
+      008350 CD 84 81         [ 4]  138 	call	_writeCmd
+      008353 84               [ 1]  139 	pop	a
+                                    140 ;	user/tm1638.c: 59: writeCmd(0x80|(tm1638.active ? 8 : 0)|tm1638.intensity); //display and brightness = 4
+      008354 1E 02            [ 2]  141 	ldw	x, (0x02, sp)
+      008356 F6               [ 1]  142 	ld	a, (x)
+      008357 4D               [ 1]  143 	tnz	a
+      008358 27 03            [ 1]  144 	jreq	00106$
+      00835A A6 08            [ 1]  145 	ld	a, #0x08
+      00835C 21                     146 	.byte 0x21
+      00835D                        147 00106$:
+      00835D 4F               [ 1]  148 	clr	a
+      00835E                        149 00107$:
+      00835E AA 80            [ 1]  150 	or	a, #0x80
+      008360 6B 01            [ 1]  151 	ld	(0x01, sp), a
+      008362 1E 04            [ 2]  152 	ldw	x, (0x04, sp)
+      008364 F6               [ 1]  153 	ld	a, (x)
+      008365 1A 01            [ 1]  154 	or	a, (0x01, sp)
+      008367 88               [ 1]  155 	push	a
+      008368 CD 84 81         [ 4]  156 	call	_writeCmd
+      00836B 84               [ 1]  157 	pop	a
+                                    158 ;	user/tm1638.c: 60: Reset(tm1638.StbPin);
+      00836C 1E 08            [ 2]  159 	ldw	x, (0x08, sp)
+      00836E F6               [ 1]  160 	ld	a, (x)
+      00836F 1E 0A            [ 2]  161 	ldw	x, (0x0a, sp)
+      008371 FE               [ 2]  162 	ldw	x, (x)
+      008372 88               [ 1]  163 	push	a
+      008373 89               [ 2]  164 	pushw	x
+      008374 CD 8A 63         [ 4]  165 	call	_GPIO_WriteLow
+      008377 5B 03            [ 2]  166 	addw	sp, #3
+                                    167 ;	user/tm1638.c: 61: writeByte(0xC0);
+      008379 4B C0            [ 1]  168 	push	#0xc0
+      00837B CD 83 9B         [ 4]  169 	call	_writeByte
+      00837E 84               [ 1]  170 	pop	a
+                                    171 ;	user/tm1638.c: 62: for(i = 0; i < 16; i++)
+      00837F 4F               [ 1]  172 	clr	a
+      008380                        173 00102$:
+                                    174 ;	user/tm1638.c: 63: writeByte(0x00);
+      008380 88               [ 1]  175 	push	a
+      008381 4B 00            [ 1]  176 	push	#0x00
+      008383 CD 83 9B         [ 4]  177 	call	_writeByte
+      008386 84               [ 1]  178 	pop	a
+      008387 84               [ 1]  179 	pop	a
+                                    180 ;	user/tm1638.c: 62: for(i = 0; i < 16; i++)
+      008388 4C               [ 1]  181 	inc	a
+      008389 A1 10            [ 1]  182 	cp	a, #0x10
+      00838B 25 F3            [ 1]  183 	jrc	00102$
+                                    184 ;	user/tm1638.c: 64: Set(tm1638.StbPin);
+      00838D 1E 08            [ 2]  185 	ldw	x, (0x08, sp)
+      00838F F6               [ 1]  186 	ld	a, (x)
+      008390 1E 0A            [ 2]  187 	ldw	x, (0x0a, sp)
+      008392 FE               [ 2]  188 	ldw	x, (x)
+      008393 88               [ 1]  189 	push	a
+      008394 89               [ 2]  190 	pushw	x
+      008395 CD 8A 5C         [ 4]  191 	call	_GPIO_WriteHigh
+      008398 5B 0E            [ 2]  192 	addw	sp, #14
+      00839A 81               [ 4]  193 	ret
+                                    194 ;	user/tm1638.c: 67: static void writeByte(uint8_t byte)
+                                    195 ;	-----------------------------------------
+                                    196 ;	 function writeByte
+                                    197 ;	-----------------------------------------
+      00839B                        198 _writeByte:
+      00839B 52 05            [ 2]  199 	sub	sp, #5
+                                    200 ;	user/tm1638.c: 70: for(i = 0; i < 8; i++)
+      00839D AE 00 10         [ 2]  201 	ldw	x, #_tm1638+0
+      0083A0 1F 02            [ 2]  202 	ldw	(0x02, sp), x
+      0083A2 1E 02            [ 2]  203 	ldw	x, (0x02, sp)
+      0083A4 1C 00 03         [ 2]  204 	addw	x, #0x0003
+      0083A7 1F 04            [ 2]  205 	ldw	(0x04, sp), x
+      0083A9 0F 01            [ 1]  206 	clr	(0x01, sp)
+      0083AB                        207 00105$:
+                                    208 ;	user/tm1638.c: 72: Reset(tm1638.ClkPin); //input Data at rising edge of the clock
+      0083AB 1E 04            [ 2]  209 	ldw	x, (0x04, sp)
+      0083AD F6               [ 1]  210 	ld	a, (x)
+      0083AE 1E 02            [ 2]  211 	ldw	x, (0x02, sp)
+      0083B0 FE               [ 2]  212 	ldw	x, (x)
+      0083B1 88               [ 1]  213 	push	a
+      0083B2 89               [ 2]  214 	pushw	x
+      0083B3 CD 8A 63         [ 4]  215 	call	_GPIO_WriteLow
+      0083B6 5B 03            [ 2]  216 	addw	sp, #3
+      0083B8 1E 02            [ 2]  217 	ldw	x, (0x02, sp)
+      0083BA FE               [ 2]  218 	ldw	x, (x)
+                                    219 ;	user/tm1638.c: 73: if(byte&0x01) Set(tm1638.DataPin);
+      0083BB 16 02            [ 2]  220 	ldw	y, (0x02, sp)
+      0083BD 90 E6 04         [ 1]  221 	ld	a, (0x4, y)
+      0083C0 88               [ 1]  222 	push	a
+      0083C1 7B 09            [ 1]  223 	ld	a, (0x09, sp)
+      0083C3 44               [ 1]  224 	srl	a
+      0083C4 84               [ 1]  225 	pop	a
+      0083C5 24 09            [ 1]  226 	jrnc	00102$
+      0083C7 88               [ 1]  227 	push	a
+      0083C8 89               [ 2]  228 	pushw	x
+      0083C9 CD 8A 5C         [ 4]  229 	call	_GPIO_WriteHigh
+      0083CC 5B 03            [ 2]  230 	addw	sp, #3
+      0083CE 20 07            [ 2]  231 	jra	00103$
+      0083D0                        232 00102$:
+                                    233 ;	user/tm1638.c: 74: else Reset(tm1638.DataPin);
+      0083D0 88               [ 1]  234 	push	a
+      0083D1 89               [ 2]  235 	pushw	x
+      0083D2 CD 8A 63         [ 4]  236 	call	_GPIO_WriteLow
+      0083D5 5B 03            [ 2]  237 	addw	sp, #3
+      0083D7                        238 00103$:
+                                    239 ;	user/tm1638.c: 75: Set(tm1638.ClkPin);
+      0083D7 1E 04            [ 2]  240 	ldw	x, (0x04, sp)
+      0083D9 F6               [ 1]  241 	ld	a, (x)
+      0083DA 1E 02            [ 2]  242 	ldw	x, (0x02, sp)
+      0083DC FE               [ 2]  243 	ldw	x, (x)
+      0083DD 88               [ 1]  244 	push	a
+      0083DE 89               [ 2]  245 	pushw	x
+      0083DF CD 8A 5C         [ 4]  246 	call	_GPIO_WriteHigh
+      0083E2 5B 03            [ 2]  247 	addw	sp, #3
+                                    248 ;	user/tm1638.c: 76: byte>>=1;
+      0083E4 04 08            [ 1]  249 	srl	(0x08, sp)
+                                    250 ;	user/tm1638.c: 70: for(i = 0; i < 8; i++)
+      0083E6 0C 01            [ 1]  251 	inc	(0x01, sp)
+      0083E8 7B 01            [ 1]  252 	ld	a, (0x01, sp)
+      0083EA A1 08            [ 1]  253 	cp	a, #0x08
+      0083EC 25 BD            [ 1]  254 	jrc	00105$
+      0083EE 5B 05            [ 2]  255 	addw	sp, #5
+      0083F0 81               [ 4]  256 	ret
+                                    257 ;	user/tm1638.c: 80: static uint8_t readByte(void)
+                                    258 ;	-----------------------------------------
+                                    259 ;	 function readByte
+                                    260 ;	-----------------------------------------
+      0083F1                        261 _readByte:
+      0083F1 52 08            [ 2]  262 	sub	sp, #8
+                                    263 ;	user/tm1638.c: 83: uint8_t temp = 0x00;
+      0083F3 0F 01            [ 1]  264 	clr	(0x01, sp)
+                                    265 ;	user/tm1638.c: 84: GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_IN_PU_NO_IT);
+      0083F5 AE 00 10         [ 2]  266 	ldw	x, #_tm1638+0
+      0083F8 1F 07            [ 2]  267 	ldw	(0x07, sp), x
+      0083FA 1E 07            [ 2]  268 	ldw	x, (0x07, sp)
+      0083FC 1C 00 04         [ 2]  269 	addw	x, #0x0004
+      0083FF 1F 05            [ 2]  270 	ldw	(0x05, sp), x
+      008401 1E 05            [ 2]  271 	ldw	x, (0x05, sp)
+      008403 F6               [ 1]  272 	ld	a, (x)
+      008404 1E 07            [ 2]  273 	ldw	x, (0x07, sp)
+      008406 FE               [ 2]  274 	ldw	x, (x)
+      008407 4B 40            [ 1]  275 	push	#0x40
+      008409 88               [ 1]  276 	push	a
+      00840A 89               [ 2]  277 	pushw	x
+      00840B CD 89 C8         [ 4]  278 	call	_GPIO_Init
+      00840E 5B 04            [ 2]  279 	addw	sp, #4
+                                    280 ;	user/tm1638.c: 85: Set(tm1638.DataPin);
+      008410 1E 05            [ 2]  281 	ldw	x, (0x05, sp)
+      008412 F6               [ 1]  282 	ld	a, (x)
+      008413 1E 07            [ 2]  283 	ldw	x, (0x07, sp)
+      008415 FE               [ 2]  284 	ldw	x, (x)
+      008416 88               [ 1]  285 	push	a
+      008417 89               [ 2]  286 	pushw	x
+      008418 CD 8A 5C         [ 4]  287 	call	_GPIO_WriteHigh
+      00841B 5B 03            [ 2]  288 	addw	sp, #3
+                                    289 ;	user/tm1638.c: 86: for(i = 0; i < 8; i++)
+      00841D 1E 07            [ 2]  290 	ldw	x, (0x07, sp)
+      00841F 1C 00 03         [ 2]  291 	addw	x, #0x0003
+      008422 1F 03            [ 2]  292 	ldw	(0x03, sp), x
+      008424 0F 02            [ 1]  293 	clr	(0x02, sp)
+      008426                        294 00104$:
+                                    295 ;	user/tm1638.c: 88: temp>>=1;
+      008426 04 01            [ 1]  296 	srl	(0x01, sp)
+                                    297 ;	user/tm1638.c: 89: Set(tm1638.ClkPin); //Output Data at falling edge of the clock
+      008428 1E 03            [ 2]  298 	ldw	x, (0x03, sp)
+      00842A F6               [ 1]  299 	ld	a, (x)
+      00842B 1E 07            [ 2]  300 	ldw	x, (0x07, sp)
+      00842D FE               [ 2]  301 	ldw	x, (x)
+      00842E 88               [ 1]  302 	push	a
+      00842F 89               [ 2]  303 	pushw	x
+      008430 CD 8A 5C         [ 4]  304 	call	_GPIO_WriteHigh
+      008433 5B 03            [ 2]  305 	addw	sp, #3
+                                    306 ;	user/tm1638.c: 90: if(Get(tm1638.DataPin)) temp |= 0x80;
+      008435 1E 05            [ 2]  307 	ldw	x, (0x05, sp)
+      008437 F6               [ 1]  308 	ld	a, (x)
+      008438 1E 07            [ 2]  309 	ldw	x, (0x07, sp)
+      00843A FE               [ 2]  310 	ldw	x, (x)
+      00843B 88               [ 1]  311 	push	a
+      00843C 89               [ 2]  312 	pushw	x
+      00843D CD 8A 81         [ 4]  313 	call	_GPIO_ReadInputPin
+      008440 5B 03            [ 2]  314 	addw	sp, #3
+      008442 4D               [ 1]  315 	tnz	a
+      008443 27 06            [ 1]  316 	jreq	00102$
+      008445 7B 01            [ 1]  317 	ld	a, (0x01, sp)
+      008447 AA 80            [ 1]  318 	or	a, #0x80
+      008449 6B 01            [ 1]  319 	ld	(0x01, sp), a
+      00844B                        320 00102$:
+                                    321 ;	user/tm1638.c: 91: Reset(tm1638.ClkPin);
+      00844B 1E 03            [ 2]  322 	ldw	x, (0x03, sp)
+      00844D F6               [ 1]  323 	ld	a, (x)
+      00844E 1E 07            [ 2]  324 	ldw	x, (0x07, sp)
+      008450 FE               [ 2]  325 	ldw	x, (x)
+      008451 88               [ 1]  326 	push	a
+      008452 89               [ 2]  327 	pushw	x
+      008453 CD 8A 63         [ 4]  328 	call	_GPIO_WriteLow
+      008456 5B 03            [ 2]  329 	addw	sp, #3
+                                    330 ;	user/tm1638.c: 86: for(i = 0; i < 8; i++)
+      008458 0C 02            [ 1]  331 	inc	(0x02, sp)
+      00845A 7B 02            [ 1]  332 	ld	a, (0x02, sp)
+      00845C A1 08            [ 1]  333 	cp	a, #0x08
+      00845E 25 C6            [ 1]  334 	jrc	00104$
+                                    335 ;	user/tm1638.c: 93: GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
+      008460 1E 05            [ 2]  336 	ldw	x, (0x05, sp)
+      008462 F6               [ 1]  337 	ld	a, (x)
+      008463 1E 07            [ 2]  338 	ldw	x, (0x07, sp)
+      008465 FE               [ 2]  339 	ldw	x, (x)
+      008466 4B B0            [ 1]  340 	push	#0xb0
+      008468 88               [ 1]  341 	push	a
+      008469 89               [ 2]  342 	pushw	x
+      00846A CD 89 C8         [ 4]  343 	call	_GPIO_Init
+      00846D 5B 04            [ 2]  344 	addw	sp, #4
+                                    345 ;	user/tm1638.c: 94: Reset(tm1638.DataPin);
+      00846F 1E 05            [ 2]  346 	ldw	x, (0x05, sp)
+      008471 F6               [ 1]  347 	ld	a, (x)
+      008472 1E 07            [ 2]  348 	ldw	x, (0x07, sp)
+      008474 FE               [ 2]  349 	ldw	x, (x)
+      008475 88               [ 1]  350 	push	a
+      008476 89               [ 2]  351 	pushw	x
+      008477 CD 8A 63         [ 4]  352 	call	_GPIO_WriteLow
+      00847A 5B 03            [ 2]  353 	addw	sp, #3
+                                    354 ;	user/tm1638.c: 95: return temp;
+      00847C 7B 01            [ 1]  355 	ld	a, (0x01, sp)
+      00847E 5B 08            [ 2]  356 	addw	sp, #8
+      008480 81               [ 4]  357 	ret
+                                    358 ;	user/tm1638.c: 98: static void writeCmd(uint8_t cmd)
+                                    359 ;	-----------------------------------------
+                                    360 ;	 function writeCmd
+                                    361 ;	-----------------------------------------
+      008481                        362 _writeCmd:
+      008481 89               [ 2]  363 	pushw	x
+                                    364 ;	user/tm1638.c: 100: Set(tm1638.StbPin); 
+      008482 AE 00 10         [ 2]  365 	ldw	x, #_tm1638+0
+      008485 1F 01            [ 2]  366 	ldw	(0x01, sp), x
+      008487 1E 01            [ 2]  367 	ldw	x, (0x01, sp)
+      008489 5C               [ 2]  368 	incw	x
+      00848A 5C               [ 2]  369 	incw	x
+      00848B F6               [ 1]  370 	ld	a, (x)
+      00848C 16 01            [ 2]  371 	ldw	y, (0x01, sp)
+      00848E 90 FE            [ 2]  372 	ldw	y, (y)
+      008490 89               [ 2]  373 	pushw	x
+      008491 88               [ 1]  374 	push	a
+      008492 90 89            [ 2]  375 	pushw	y
+      008494 CD 8A 5C         [ 4]  376 	call	_GPIO_WriteHigh
+      008497 5B 03            [ 2]  377 	addw	sp, #3
+      008499 85               [ 2]  378 	popw	x
+                                    379 ;	user/tm1638.c: 101: Reset(tm1638.StbPin); // falling edge STB is an instruction
+      00849A F6               [ 1]  380 	ld	a, (x)
+      00849B 1E 01            [ 2]  381 	ldw	x, (0x01, sp)
+      00849D FE               [ 2]  382 	ldw	x, (x)
+      00849E 88               [ 1]  383 	push	a
+      00849F 89               [ 2]  384 	pushw	x
+      0084A0 CD 8A 63         [ 4]  385 	call	_GPIO_WriteLow
+      0084A3 5B 03            [ 2]  386 	addw	sp, #3
+                                    387 ;	user/tm1638.c: 102: writeByte(cmd); // Send command
+      0084A5 7B 05            [ 1]  388 	ld	a, (0x05, sp)
+      0084A7 88               [ 1]  389 	push	a
+      0084A8 CD 83 9B         [ 4]  390 	call	_writeByte
+      0084AB 84               [ 1]  391 	pop	a
+      0084AC 85               [ 2]  392 	popw	x
+      0084AD 81               [ 4]  393 	ret
+                                    394 ;	user/tm1638.c: 105: static void writeData(uint8_t addr, uint8_t data)
+                                    395 ;	-----------------------------------------
+                                    396 ;	 function writeData
+                                    397 ;	-----------------------------------------
+      0084AE                        398 _writeData:
+                                    399 ;	user/tm1638.c: 107: writeCmd(0x44); //Setting Data (B7B6: 01): Normal Mode, Fixed addr, Write data
+      0084AE 4B 44            [ 1]  400 	push	#0x44
+      0084B0 CD 84 81         [ 4]  401 	call	_writeCmd
+      0084B3 84               [ 1]  402 	pop	a
+                                    403 ;	user/tm1638.c: 108: writeCmd(0xC0|addr); //Setting Address (B7B6: 11): Display addr: 00H-0FH
+      0084B4 7B 03            [ 1]  404 	ld	a, (0x03, sp)
+      0084B6 AA C0            [ 1]  405 	or	a, #0xc0
+      0084B8 88               [ 1]  406 	push	a
+      0084B9 CD 84 81         [ 4]  407 	call	_writeCmd
+      0084BC 84               [ 1]  408 	pop	a
+                                    409 ;	user/tm1638.c: 109: writeByte(data); // Send Data
+      0084BD 7B 04            [ 1]  410 	ld	a, (0x04, sp)
+      0084BF 88               [ 1]  411 	push	a
+      0084C0 CD 83 9B         [ 4]  412 	call	_writeByte
+      0084C3 84               [ 1]  413 	pop	a
+      0084C4 81               [ 4]  414 	ret
+                                    415 ;	user/tm1638.c: 113: void sendChar(uint8_t pos, uint8_t data, bool dot)
+                                    416 ;	-----------------------------------------
+                                    417 ;	 function sendChar
+                                    418 ;	-----------------------------------------
+      0084C5                        419 _sendChar:
+                                    420 ;	user/tm1638.c: 115: writeData(pos << 1, data | (dot ? 0x80: 0x00));
+      0084C5 0D 05            [ 1]  421 	tnz	(0x05, sp)
+      0084C7 27 03            [ 1]  422 	jreq	00103$
+      0084C9 A6 80            [ 1]  423 	ld	a, #0x80
+      0084CB 21                     424 	.byte 0x21
+      0084CC                        425 00103$:
+      0084CC 4F               [ 1]  426 	clr	a
+      0084CD                        427 00104$:
+      0084CD 1A 04            [ 1]  428 	or	a, (0x04, sp)
+      0084CF 97               [ 1]  429 	ld	xl, a
+      0084D0 7B 03            [ 1]  430 	ld	a, (0x03, sp)
+      0084D2 48               [ 1]  431 	sll	a
+      0084D3 89               [ 2]  432 	pushw	x
+      0084D4 5B 01            [ 2]  433 	addw	sp, #1
+      0084D6 88               [ 1]  434 	push	a
+      0084D7 CD 84 AE         [ 4]  435 	call	_writeData
+      0084DA 85               [ 2]  436 	popw	x
+      0084DB 81               [ 4]  437 	ret
+                                    438 ;	user/tm1638.c: 118: void configDisplay(bool active, uint8_t intensity)
+                                    439 ;	-----------------------------------------
+                                    440 ;	 function configDisplay
+                                    441 ;	-----------------------------------------
+      0084DC                        442 _configDisplay:
+      0084DC 52 05            [ 2]  443 	sub	sp, #5
+                                    444 ;	user/tm1638.c: 120: tm1638.intensity = intensity;
+      0084DE AE 00 10         [ 2]  445 	ldw	x, #_tm1638+0
+      0084E1 1F 04            [ 2]  446 	ldw	(0x04, sp), x
+      0084E3 1E 04            [ 2]  447 	ldw	x, (0x04, sp)
+      0084E5 1C 00 05         [ 2]  448 	addw	x, #0x0005
+      0084E8 7B 09            [ 1]  449 	ld	a, (0x09, sp)
+      0084EA F7               [ 1]  450 	ld	(x), a
+                                    451 ;	user/tm1638.c: 121: tm1638.active = active;
+      0084EB 16 04            [ 2]  452 	ldw	y, (0x04, sp)
+      0084ED 72 A9 00 07      [ 2]  453 	addw	y, #0x0007
+      0084F1 7B 08            [ 1]  454 	ld	a, (0x08, sp)
+      0084F3 90 F7            [ 1]  455 	ld	(y), a
+                                    456 ;	user/tm1638.c: 122: writeCmd(0x80|(tm1638.active ? 8 : 0)| tm1638.intensity); //Display control (B7B6: 10): B3: 1: enable, 0: disable; B2B1B0: 0-7: brighness
+      0084F5 0D 08            [ 1]  457 	tnz	(0x08, sp)
+      0084F7 27 03            [ 1]  458 	jreq	00103$
+      0084F9 A6 08            [ 1]  459 	ld	a, #0x08
+      0084FB 21                     460 	.byte 0x21
+      0084FC                        461 00103$:
+      0084FC 4F               [ 1]  462 	clr	a
+      0084FD                        463 00104$:
+      0084FD AA 80            [ 1]  464 	or	a, #0x80
+      0084FF 6B 03            [ 1]  465 	ld	(0x03, sp), a
+      008501 F6               [ 1]  466 	ld	a, (x)
+      008502 1A 03            [ 1]  467 	or	a, (0x03, sp)
+      008504 88               [ 1]  468 	push	a
+      008505 CD 84 81         [ 4]  469 	call	_writeCmd
+      008508 84               [ 1]  470 	pop	a
+                                    471 ;	user/tm1638.c: 123: Reset(tm1638.StbPin);
+      008509 1E 04            [ 2]  472 	ldw	x, (0x04, sp)
+      00850B 5C               [ 2]  473 	incw	x
+      00850C 5C               [ 2]  474 	incw	x
+      00850D 1F 01            [ 2]  475 	ldw	(0x01, sp), x
+      00850F 1E 01            [ 2]  476 	ldw	x, (0x01, sp)
+      008511 F6               [ 1]  477 	ld	a, (x)
+      008512 1E 04            [ 2]  478 	ldw	x, (0x04, sp)
+      008514 FE               [ 2]  479 	ldw	x, (x)
+      008515 88               [ 1]  480 	push	a
+      008516 89               [ 2]  481 	pushw	x
+      008517 CD 8A 63         [ 4]  482 	call	_GPIO_WriteLow
+      00851A 5B 03            [ 2]  483 	addw	sp, #3
+                                    484 ;	user/tm1638.c: 124: Reset(tm1638.ClkPin);
+      00851C 1E 04            [ 2]  485 	ldw	x, (0x04, sp)
+      00851E 1C 00 03         [ 2]  486 	addw	x, #0x0003
+      008521 F6               [ 1]  487 	ld	a, (x)
+      008522 16 04            [ 2]  488 	ldw	y, (0x04, sp)
+      008524 90 FE            [ 2]  489 	ldw	y, (y)
+      008526 89               [ 2]  490 	pushw	x
+      008527 88               [ 1]  491 	push	a
+      008528 90 89            [ 2]  492 	pushw	y
+      00852A CD 8A 63         [ 4]  493 	call	_GPIO_WriteLow
+      00852D 5B 03            [ 2]  494 	addw	sp, #3
+      00852F 85               [ 2]  495 	popw	x
+                                    496 ;	user/tm1638.c: 125: Set(tm1638.ClkPin);
+      008530 F6               [ 1]  497 	ld	a, (x)
+      008531 1E 04            [ 2]  498 	ldw	x, (0x04, sp)
+      008533 FE               [ 2]  499 	ldw	x, (x)
+      008534 88               [ 1]  500 	push	a
+      008535 89               [ 2]  501 	pushw	x
+      008536 CD 8A 5C         [ 4]  502 	call	_GPIO_WriteHigh
+      008539 5B 03            [ 2]  503 	addw	sp, #3
+                                    504 ;	user/tm1638.c: 126: Set(tm1638.StbPin);
+      00853B 1E 01            [ 2]  505 	ldw	x, (0x01, sp)
+      00853D F6               [ 1]  506 	ld	a, (x)
+      00853E 1E 04            [ 2]  507 	ldw	x, (0x04, sp)
+      008540 FE               [ 2]  508 	ldw	x, (x)
+      008541 88               [ 1]  509 	push	a
+      008542 89               [ 2]  510 	pushw	x
+      008543 CD 8A 5C         [ 4]  511 	call	_GPIO_WriteHigh
+      008546 5B 08            [ 2]  512 	addw	sp, #8
+      008548 81               [ 4]  513 	ret
+                                    514 ;	user/tm1638.c: 129: void setDisplayDigit(uint8_t digit, uint8_t pos, bool dot, const uint8_t numberFont[])
+                                    515 ;	-----------------------------------------
+                                    516 ;	 function setDisplayDigit
+                                    517 ;	-----------------------------------------
+      008549                        518 _setDisplayDigit:
+                                    519 ;	user/tm1638.c: 131: sendChar(pos, numberFont[digit & 0xF], dot);
+      008549 7B 03            [ 1]  520 	ld	a, (0x03, sp)
+      00854B A4 0F            [ 1]  521 	and	a, #0x0f
+      00854D 5F               [ 1]  522 	clrw	x
+      00854E 97               [ 1]  523 	ld	xl, a
+      00854F 72 FB 06         [ 2]  524 	addw	x, (0x06, sp)
+      008552 F6               [ 1]  525 	ld	a, (x)
+      008553 97               [ 1]  526 	ld	xl, a
+      008554 7B 05            [ 1]  527 	ld	a, (0x05, sp)
+      008556 88               [ 1]  528 	push	a
+      008557 9F               [ 1]  529 	ld	a, xl
+      008558 88               [ 1]  530 	push	a
+      008559 7B 06            [ 1]  531 	ld	a, (0x06, sp)
+      00855B 88               [ 1]  532 	push	a
+      00855C CD 84 C5         [ 4]  533 	call	_sendChar
+      00855F 5B 03            [ 2]  534 	addw	sp, #3
+      008561 81               [ 4]  535 	ret
+                                    536 ;	user/tm1638.c: 134: void clearDisplayDigit(uint8_t pos, bool dot)
+                                    537 ;	-----------------------------------------
+                                    538 ;	 function clearDisplayDigit
+                                    539 ;	-----------------------------------------
+      008562                        540 _clearDisplayDigit:
+                                    541 ;	user/tm1638.c: 136: sendChar(pos, 0, dot);
+      008562 7B 04            [ 1]  542 	ld	a, (0x04, sp)
+      008564 88               [ 1]  543 	push	a
+      008565 4B 00            [ 1]  544 	push	#0x00
+      008567 7B 05            [ 1]  545 	ld	a, (0x05, sp)
+      008569 88               [ 1]  546 	push	a
+      00856A CD 84 C5         [ 4]  547 	call	_sendChar
+      00856D 5B 03            [ 2]  548 	addw	sp, #3
+      00856F 81               [ 4]  549 	ret
+                                    550 ;	user/tm1638.c: 139: void setDisplay(const uint8_t values[], uint8_t size)
+                                    551 ;	-----------------------------------------
+                                    552 ;	 function setDisplay
+                                    553 ;	-----------------------------------------
+      008570                        554 _setDisplay:
+                                    555 ;	user/tm1638.c: 142: for(i = 0; i<size; i++) 
+      008570 4F               [ 1]  556 	clr	a
+      008571                        557 00103$:
+      008571 11 05            [ 1]  558 	cp	a, (0x05, sp)
+      008573 25 01            [ 1]  559 	jrc	00116$
+      008575 81               [ 4]  560 	ret
+      008576                        561 00116$:
+                                    562 ;	user/tm1638.c: 143: sendChar(i, values[i], 0);
+      008576 5F               [ 1]  563 	clrw	x
+      008577 97               [ 1]  564 	ld	xl, a
+      008578 72 FB 03         [ 2]  565 	addw	x, (0x03, sp)
+      00857B 88               [ 1]  566 	push	a
+      00857C F6               [ 1]  567 	ld	a, (x)
+      00857D 97               [ 1]  568 	ld	xl, a
+      00857E 84               [ 1]  569 	pop	a
+      00857F 88               [ 1]  570 	push	a
+      008580 4B 00            [ 1]  571 	push	#0x00
+      008582 89               [ 2]  572 	pushw	x
+      008583 5B 01            [ 2]  573 	addw	sp, #1
+      008585 88               [ 1]  574 	push	a
+      008586 CD 84 C5         [ 4]  575 	call	_sendChar
+      008589 5B 03            [ 2]  576 	addw	sp, #3
+      00858B 84               [ 1]  577 	pop	a
+                                    578 ;	user/tm1638.c: 142: for(i = 0; i<size; i++) 
+      00858C 4C               [ 1]  579 	inc	a
+      00858D 20 E2            [ 2]  580 	jra	00103$
+      00858F 81               [ 4]  581 	ret
+                                    582 ;	user/tm1638.c: 146: void clearDisplay(void)
+                                    583 ;	-----------------------------------------
+                                    584 ;	 function clearDisplay
+                                    585 ;	-----------------------------------------
+      008590                        586 _clearDisplay:
+                                    587 ;	user/tm1638.c: 149: for(i = 0; i < 8; i++)
+      008590 4F               [ 1]  588 	clr	a
+      008591                        589 00102$:
+                                    590 ;	user/tm1638.c: 150: writeData(i << 1, 0);
+      008591 97               [ 1]  591 	ld	xl, a
+      008592 58               [ 2]  592 	sllw	x
+      008593 88               [ 1]  593 	push	a
+      008594 4B 00            [ 1]  594 	push	#0x00
+      008596 89               [ 2]  595 	pushw	x
+      008597 5B 01            [ 2]  596 	addw	sp, #1
+      008599 CD 84 AE         [ 4]  597 	call	_writeData
+      00859C 85               [ 2]  598 	popw	x
+      00859D 84               [ 1]  599 	pop	a
+                                    600 ;	user/tm1638.c: 149: for(i = 0; i < 8; i++)
+      00859E 4C               [ 1]  601 	inc	a
+      00859F A1 08            [ 1]  602 	cp	a, #0x08
+      0085A1 25 EE            [ 1]  603 	jrc	00102$
+      0085A3 81               [ 4]  604 	ret
+                                    605 ;	user/tm1638.c: 165: void displayNumber(uint8_t pos, uint8_t number, bool dot)
+                                    606 ;	-----------------------------------------
+                                    607 ;	 function displayNumber
+                                    608 ;	-----------------------------------------
+      0085A4                        609 _displayNumber:
+                                    610 ;	user/tm1638.c: 167: setDisplayDigit(number, pos, dot, NUMBER_FONT);
+      0085A4 AE 86 24         [ 2]  611 	ldw	x, #_NUMBER_FONT+0
+      0085A7 89               [ 2]  612 	pushw	x
+      0085A8 7B 07            [ 1]  613 	ld	a, (0x07, sp)
+      0085AA 88               [ 1]  614 	push	a
+      0085AB 7B 06            [ 1]  615 	ld	a, (0x06, sp)
+      0085AD 88               [ 1]  616 	push	a
+      0085AE 7B 08            [ 1]  617 	ld	a, (0x08, sp)
+      0085B0 88               [ 1]  618 	push	a
+      0085B1 CD 85 49         [ 4]  619 	call	_setDisplayDigit
+      0085B4 5B 05            [ 2]  620 	addw	sp, #5
+      0085B6 81               [ 4]  621 	ret
+                                    622 ;	user/tm1638.c: 170: void setLed(uint8_t color, uint8_t pos)
+                                    623 ;	-----------------------------------------
+                                    624 ;	 function setLed
+                                    625 ;	-----------------------------------------
+      0085B7                        626 _setLed:
+                                    627 ;	user/tm1638.c: 172: writeData((pos<<1)+1, color);
+      0085B7 7B 04            [ 1]  628 	ld	a, (0x04, sp)
+      0085B9 48               [ 1]  629 	sll	a
+      0085BA 4C               [ 1]  630 	inc	a
+      0085BB 97               [ 1]  631 	ld	xl, a
+      0085BC 7B 03            [ 1]  632 	ld	a, (0x03, sp)
+      0085BE 88               [ 1]  633 	push	a
+      0085BF 9F               [ 1]  634 	ld	a, xl
+      0085C0 88               [ 1]  635 	push	a
+      0085C1 CD 84 AE         [ 4]  636 	call	_writeData
+      0085C4 85               [ 2]  637 	popw	x
+      0085C5 81               [ 4]  638 	ret
+                                    639 ;	user/tm1638.c: 177: uint8_t getKey(void)
+                                    640 ;	-----------------------------------------
+                                    641 ;	 function getKey
+                                    642 ;	-----------------------------------------
+      0085C6                        643 _getKey:
+      0085C6 52 06            [ 2]  644 	sub	sp, #6
+                                    645 ;	user/tm1638.c: 181: uint16_t key2 = 0x00;
+      0085C8 5F               [ 1]  646 	clrw	x
+      0085C9 1F 01            [ 2]  647 	ldw	(0x01, sp), x
+                                    648 ;	user/tm1638.c: 182: writeCmd(0x42);
+      0085CB 4B 42            [ 1]  649 	push	#0x42
+      0085CD CD 84 81         [ 4]  650 	call	_writeCmd
+      0085D0 84               [ 1]  651 	pop	a
+                                    652 ;	user/tm1638.c: 183: Set(tm1638.DataPin);
+      0085D1 AE 00 10         [ 2]  653 	ldw	x, #_tm1638+0
+      0085D4 1F 05            [ 2]  654 	ldw	(0x05, sp), x
+      0085D6 16 05            [ 2]  655 	ldw	y, (0x05, sp)
+      0085D8 90 E6 04         [ 1]  656 	ld	a, (0x4, y)
+      0085DB FE               [ 2]  657 	ldw	x, (x)
+      0085DC 88               [ 1]  658 	push	a
+      0085DD 89               [ 2]  659 	pushw	x
+      0085DE CD 8A 5C         [ 4]  660 	call	_GPIO_WriteHigh
+      0085E1 5B 03            [ 2]  661 	addw	sp, #3
+                                    662 ;	user/tm1638.c: 184: for(i = 0; i < 4; i++)
+      0085E3 0F 03            [ 1]  663 	clr	(0x03, sp)
+      0085E5                        664 00105$:
+                                    665 ;	user/tm1638.c: 186: key1 = readByte();
+      0085E5 CD 83 F1         [ 4]  666 	call	_readByte
+                                    667 ;	user/tm1638.c: 187: key2 |= (key1<<i);
+      0085E8 5F               [ 1]  668 	clrw	x
+      0085E9 97               [ 1]  669 	ld	xl, a
+      0085EA 7B 03            [ 1]  670 	ld	a, (0x03, sp)
+      0085EC 27 04            [ 1]  671 	jreq	00133$
+      0085EE                        672 00132$:
+      0085EE 58               [ 2]  673 	sllw	x
+      0085EF 4A               [ 1]  674 	dec	a
+      0085F0 26 FC            [ 1]  675 	jrne	00132$
+      0085F2                        676 00133$:
+      0085F2 9F               [ 1]  677 	ld	a, xl
+      0085F3 1A 02            [ 1]  678 	or	a, (0x02, sp)
+      0085F5 02               [ 1]  679 	rlwa	x
+      0085F6 1A 01            [ 1]  680 	or	a, (0x01, sp)
+      0085F8 95               [ 1]  681 	ld	xh, a
+      0085F9 1F 01            [ 2]  682 	ldw	(0x01, sp), x
+                                    683 ;	user/tm1638.c: 184: for(i = 0; i < 4; i++)
+      0085FB 0C 03            [ 1]  684 	inc	(0x03, sp)
+      0085FD 7B 03            [ 1]  685 	ld	a, (0x03, sp)
+      0085FF A1 04            [ 1]  686 	cp	a, #0x04
+      008601 25 E2            [ 1]  687 	jrc	00105$
+                                    688 ;	user/tm1638.c: 190: for(i = 0; i < 8; i++)
+      008603 0F 04            [ 1]  689 	clr	(0x04, sp)
+      008605 4F               [ 1]  690 	clr	a
+      008606                        691 00107$:
+                                    692 ;	user/tm1638.c: 192: if(0x00<<i == key2) return i+1;
+      008606 88               [ 1]  693 	push	a
+      008607 5F               [ 1]  694 	clrw	x
+      008608 4D               [ 1]  695 	tnz	a
+      008609 27 04            [ 1]  696 	jreq	00136$
+      00860B                        697 00135$:
+      00860B 58               [ 2]  698 	sllw	x
+      00860C 4A               [ 1]  699 	dec	a
+      00860D 26 FC            [ 1]  700 	jrne	00135$
+      00860F                        701 00136$:
+      00860F 84               [ 1]  702 	pop	a
+      008610 13 01            [ 2]  703 	cpw	x, (0x01, sp)
+      008612 26 05            [ 1]  704 	jrne	00108$
+      008614 7B 04            [ 1]  705 	ld	a, (0x04, sp)
+      008616 4C               [ 1]  706 	inc	a
+      008617 20 08            [ 2]  707 	jra	00109$
+      008619                        708 00108$:
+                                    709 ;	user/tm1638.c: 190: for(i = 0; i < 8; i++)
+      008619 4C               [ 1]  710 	inc	a
+      00861A 6B 04            [ 1]  711 	ld	(0x04, sp), a
+      00861C A1 08            [ 1]  712 	cp	a, #0x08
+      00861E 25 E6            [ 1]  713 	jrc	00107$
+                                    714 ;	user/tm1638.c: 194: return 0;
+      008620 4F               [ 1]  715 	clr	a
+      008621                        716 00109$:
+      008621 5B 06            [ 2]  717 	addw	sp, #6
+      008623 81               [ 4]  718 	ret
                                     719 	.area CODE
-      0084A7                        720 _tm_dat:
-      0084A7 00 30                  721 	.dw #0x0030
-      0084A9 00 31                  722 	.dw #0x0031
-      0084AB 00 32                  723 	.dw #0x0032
-      0084AD 00 33                  724 	.dw #0x0033
-      0084AF 00 34                  725 	.dw #0x0034
-      0084B1 00 35                  726 	.dw #0x0035
-      0084B3 00 36                  727 	.dw #0x0036
-      0084B5 00 37                  728 	.dw #0x0037
-      0084B7 00 38                  729 	.dw #0x0038
-      0084B9 00 39                  730 	.dw #0x0039
-      0084BB 00 2E                  731 	.dw #0x002e
-      0084BD 00 2D                  732 	.dw #0x002d
-      0084BF 00 5F                  733 	.dw #0x005f
-      0084C1 00 20                  734 	.dw #0x0020
-      0084C3 00 3F                  735 	.dw #0x003f
-      0084C5 00 06                  736 	.dw #0x0006
-      0084C7 00 5B                  737 	.dw #0x005b
-      0084C9 00 4F                  738 	.dw #0x004f
-      0084CB 00 66                  739 	.dw #0x0066
-      0084CD 00 6D                  740 	.dw #0x006d
-      0084CF 00 7D                  741 	.dw #0x007d
-      0084D1 00 07                  742 	.dw #0x0007
-      0084D3 00 7F                  743 	.dw #0x007f
-      0084D5 00 6F                  744 	.dw #0x006f
-      0084D7 00 80                  745 	.dw #0x0080
-      0084D9 00 40                  746 	.dw #0x0040
-      0084DB 00 08                  747 	.dw #0x0008
-      0084DD 00 00                  748 	.dw #0x0000
-                                    749 	.area INITIALIZER
-                                    750 	.area CABS (ABS)
+      008624                        720 _NUMBER_FONT:
+      008624 3F                     721 	.db #0x3f	; 63
+      008625 06                     722 	.db #0x06	; 6
+      008626 5B                     723 	.db #0x5b	; 91
+      008627 4F                     724 	.db #0x4f	; 79	'O'
+      008628 66                     725 	.db #0x66	; 102	'f'
+      008629 6D                     726 	.db #0x6d	; 109	'm'
+      00862A 7D                     727 	.db #0x7d	; 125
+      00862B 07                     728 	.db #0x07	; 7
+      00862C 7F                     729 	.db #0x7f	; 127
+      00862D 6F                     730 	.db #0x6f	; 111	'o'
+      00862E 77                     731 	.db #0x77	; 119	'w'
+      00862F 7C                     732 	.db #0x7c	; 124
+      008630 39                     733 	.db #0x39	; 57	'9'
+      008631 5E                     734 	.db #0x5e	; 94
+      008632 79                     735 	.db #0x79	; 121	'y'
+      008633 71                     736 	.db #0x71	; 113	'q'
+      008634                        737 _ERROR_DATA:
+      008634 79                     738 	.db #0x79	; 121	'y'
+      008635 50                     739 	.db #0x50	; 80	'P'
+      008636 50                     740 	.db #0x50	; 80	'P'
+      008637 5C                     741 	.db #0x5c	; 92
+      008638 50                     742 	.db #0x50	; 80	'P'
+      008639 00                     743 	.db #0x00	; 0
+      00863A 00                     744 	.db #0x00	; 0
+      00863B 00                     745 	.db #0x00	; 0
+                                    746 	.area INITIALIZER
+                                    747 	.area CABS (ABS)

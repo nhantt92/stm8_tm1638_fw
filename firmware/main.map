@@ -19,35 +19,39 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000001  l_SSEG                          
      00000001  s_DATA                          
      00000003  l_GSFINAL                       
-     00000007  l_DATA                          
-     00000008  s_INITIALIZED                   
-     00000008  s_SSEG                          
+     00000017  l_DATA                          
+     00000018  s_INITIALIZED                   
+     00000018  s_SSEG                          
      0000001A  l_GSINIT                        
      00000083  l_HOME                          
-     00000900  l_CODE                          
+     00000AB6  l_CODE                          
      00008000  s_HOME                          
      00008083  s_GSINIT                        
      0000809D  s_GSFINAL                       
      000080A0  s_CODE                          
-     000089A0  s_INITIALIZER                   
+     00008B56  s_INITIALIZER                   
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DATA                                00000001    00000007 =           7. bytes (REL,CON)
+DATA                                00000001    00000017 =          23. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000001  _tm1638                            tm1638
-
+     00000001  _tick                              main
+     00000007  _timeGet                           timerTick
+     00000009  _timeBack                          timerTick
+     0000000B  _timeTickMs                        timerTick
+     0000000F  _timeTickUs                        timerTick
+     00000010  _tm1638                            tm1638
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000008    00000001 =           1. bytes (REL,CON)
+SSEG                                00000018    00000001 =           1. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -83,74 +87,102 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                000080A0    00000900 =        2304. bytes (REL,CON)
+CODE                                000080A0    00000AB6 =        2742. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      000080A0  _clock_setup                       main
-     00008120  _main                              main
-     00008140  _NUMBER_FONT                       main
-     00008150  _TM1638_Init                       tm1638
-     00008315  _sendChar                          tm1638
-     0000832D  _configDisplay                     tm1638
-     00008397  _setDisplayDigit                   tm1638
-     000083B0  _clearDisplayDigit                 tm1638
-     000083BE  _setDisplay                        tm1638
-     000083DE  _clearDisplay                      tm1638
-     000083F2  _TM1638_SendData                   tm1638
-     00008494  _TM1638_SendIntData                tm1638
-     000084A7  _tm_dat                            tm1638
-     000084DF  _CLK_DeInit                        stm8s_clk
-     00008517  _CLK_FastHaltWakeUpCmd             stm8s_clk
-     0000852B  _CLK_HSECmd                        stm8s_clk
-     00008539  _CLK_HSICmd                        stm8s_clk
-     00008547  _CLK_LSICmd                        stm8s_clk
-     0000855B  _CLK_CCOCmd                        stm8s_clk
-     00008569  _CLK_ClockSwitchCmd                stm8s_clk
-     0000857D  _CLK_SlowActiveHaltWakeUpCmd       stm8s_clk
-     00008591  _CLK_PeripheralClockConfig         stm8s_clk
-     000085E7  _CLK_ClockSwitchConfig             stm8s_clk
-     000086AC  _CLK_HSIPrescalerConfig            stm8s_clk
-     000086BE  _CLK_CCOConfig                     stm8s_clk
-     000086D4  _CLK_ITConfig                      stm8s_clk
-     00008723  _CLK_SYSCLKConfig                  stm8s_clk
-     0000875A  _CLK_SWIMConfig                    stm8s_clk
-     00008768  _CLK_ClockSecuritySystemEnable     stm8s_clk
-     0000876D  _CLK_GetSYSCLKSource               stm8s_clk
-     00008772  _CLK_GetClockFreq                  stm8s_clk
-     000087CB  _CLK_AdjustHSICalibrationValue     stm8s_clk
-     000087D8  _CLK_SYSCLKEmergencyClear          stm8s_clk
-     000087DD  _CLK_GetFlagStatus                 stm8s_clk
-     00008825  _CLK_GetITStatus                   stm8s_clk
-     00008849  _CLK_ClearITPendingBit             stm8s_clk
-     0000885F  _HSIDivFactor                      stm8s_clk
-     00008863  _CLKPrescTable                     stm8s_clk
-     0000886B  _GPIO_Init                         stm8s_gpio
-     000088F9  _GPIO_Write                        stm8s_gpio
-     000088FF  _GPIO_WriteHigh                    stm8s_gpio
-     00008906  _GPIO_WriteLow                     stm8s_gpio
-     00008914  _GPIO_WriteReverse                 stm8s_gpio
-     0000891B  _GPIO_ReadOutputData               stm8s_gpio
-     0000891F  _GPIO_ReadInputData                stm8s_gpio
-     00008924  _GPIO_ReadInputPin                 stm8s_gpio
-     0000892B  _GPIO_ExternalPullUpConfig         stm8s_gpio
-     00008946  __divulong                         
+     00008120  _TIM4_UPD_OVF_IRQHandler           main
+     0000812B  _delay                             main
+     00008137  _main                              main
+     000081AE  _TIMER_Init                        timerTick
+     000081E1  _TIMER_Inc                         timerTick
+     0000820D  _TIMER_InitTime                    timerTick
+     0000821D  _TIMER_CheckTimeUS                 timerTick
+     00008264  _TIMER_CheckTimeMS                 timerTick
+     000082DA  _TM1638_Init                       tm1638
+     000084C5  _sendChar                          tm1638
+     000084DC  _configDisplay                     tm1638
+     00008549  _setDisplayDigit                   tm1638
+     00008562  _clearDisplayDigit                 tm1638
+     00008570  _setDisplay                        tm1638
+     00008590  _clearDisplay                      tm1638
+     000085A4  _displayNumber                     tm1638
+     000085B7  _setLed                            tm1638
+     000085C6  _getKey                            tm1638
+     00008624  _NUMBER_FONT                       tm1638
+     00008634  _ERROR_DATA                        tm1638
+     0000863C  _CLK_DeInit                        stm8s_clk
+     00008674  _CLK_FastHaltWakeUpCmd             stm8s_clk
+     00008688  _CLK_HSECmd                        stm8s_clk
+     00008696  _CLK_HSICmd                        stm8s_clk
+     000086A4  _CLK_LSICmd                        stm8s_clk
+     000086B8  _CLK_CCOCmd                        stm8s_clk
+     000086C6  _CLK_ClockSwitchCmd                stm8s_clk
+     000086DA  _CLK_SlowActiveHaltWakeUpCmd       stm8s_clk
+     000086EE  _CLK_PeripheralClockConfig         stm8s_clk
+     00008744  _CLK_ClockSwitchConfig             stm8s_clk
+     00008809  _CLK_HSIPrescalerConfig            stm8s_clk
+     0000881B  _CLK_CCOConfig                     stm8s_clk
+     00008831  _CLK_ITConfig                      stm8s_clk
+     00008880  _CLK_SYSCLKConfig                  stm8s_clk
+     000088B7  _CLK_SWIMConfig                    stm8s_clk
+     000088C5  _CLK_ClockSecuritySystemEnable     stm8s_clk
+     000088CA  _CLK_GetSYSCLKSource               stm8s_clk
+     000088CF  _CLK_GetClockFreq                  stm8s_clk
+     00008928  _CLK_AdjustHSICalibrationValue     stm8s_clk
+     00008935  _CLK_SYSCLKEmergencyClear          stm8s_clk
+     0000893A  _CLK_GetFlagStatus                 stm8s_clk
+     00008982  _CLK_GetITStatus                   stm8s_clk
+     000089A6  _CLK_ClearITPendingBit             stm8s_clk
+     000089BC  _HSIDivFactor                      stm8s_clk
+     000089C0  _CLKPrescTable                     stm8s_clk
+     000089C8  _GPIO_Init                         stm8s_gpio
+     00008A56  _GPIO_Write                        stm8s_gpio
+     00008A5C  _GPIO_WriteHigh                    stm8s_gpio
+     00008A63  _GPIO_WriteLow                     stm8s_gpio
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                000080A0    00000AB6 =        2742. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00008A71  _GPIO_WriteReverse                 stm8s_gpio
+     00008A78  _GPIO_ReadOutputData               stm8s_gpio
+     00008A7C  _GPIO_ReadInputData                stm8s_gpio
+     00008A81  _GPIO_ReadInputPin                 stm8s_gpio
+     00008A88  _GPIO_ExternalPullUpConfig         stm8s_gpio
+     00008AA3  _TIM4_DeInit                       stm8s_tim4
+     00008ABC  _TIM4_TimeBaseInit                 stm8s_tim4
+     00008AC9  _TIM4_Cmd                          stm8s_tim4
+     00008ACE  _TIM4_ITConfig                     stm8s_tim4
+     00008AD9  _TIM4_GetCounter                   stm8s_tim4
+     00008ADE  _TIM4_GetFlagStatus                stm8s_tim4
+     00008AEC  _TIM4_ClearFlag                    stm8s_tim4
+     00008AF4  _TIM4_ClearITPendingBit            stm8s_tim4
+     00008AFC  __divulong                         
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 
 Files Linked                              [ module(s) ]
 
 build/user/main.rel                       [ main ]
+build/user/timerTick.rel                  [ timerTick ]
 build/user/tm1638.rel                     [ tm1638 ]
 build/lib/stm8s_clk.rel                   [ stm8s_clk ]
 build/lib/stm8s_gpio.rel                  [ stm8s_gpio ]
+build/lib/stm8s_tim4.rel                  [ stm8s_tim4 ]
 
 
 Libraries Linked                          [ object file ]
 
-c:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+/usr/local/bin/../share/sdcc/lib/stm8/stm8.lib
                                           [ _divulong.rel ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 
 User Base Address Definitions
 

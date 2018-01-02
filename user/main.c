@@ -16,8 +16,10 @@
 #include "stm8s_conf.h"
 #include "stm8s_spi.h"
 #include <string.h>
-#include "stm8s_i2c.h"
+#include "timerTick.h"
 #include "tm1638.h"
+
+TIME tick;
 
 void clock_setup(void)
 {
@@ -39,12 +41,13 @@ void clock_setup(void)
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
 }
-// SPI Interrupt routine.
-// INTERRUPT_HANDLER(SPI_IRQHandler, 10){
-//   if(SPI_SR & SPI_SR_RXNE){ // RX not empty - send next byte
-//     spi_send_next();
-//   }
-// }
+
+INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+{
+  TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
+  TIMER_Inc();
+  //IWDG_ReloadCounter();
+}
 
 
 
@@ -65,18 +68,42 @@ void clock_setup(void)
 //   IWDG_Enable();
 // }
 
+void delay(uint16_t x)
+{
+  while(x--);
+}
+
 void main() 
 {
-  uint16_t i;
+  uint8_t i = 0;
   clock_setup();
   TM1638_Init(GPIOC, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+  configDisplay(1, 0x07);
   // SPI_setup(); 
-  // TIMER_Init();
+  TIMER_Init();
   //IWDG_Config();
-  //enableInterrupts();
-  //TIMER_InitTime(&tick);
-  TM1638_SendIntData(1, 2);
+  enableInterrupts();
+  TIMER_InitTime(&tick);
+  //sendChar(1, 0x3F, 0);
+  for(i = 0; i < 8; i++)
+  {
+    displayNumber(i, i, FALSE);
+  }
+   for(i = 0; i < 8; i++)
+    {
+        setLed(0, i);
+    }
   while(1) 
   {
+    for(i = 0; i < 8; i++)
+    {
+        setLed(1, i);
+        delay(50000);
+    }
+    for(i = 0; i < 8; i++)
+    {
+        setLed(0, i);
+        delay(50000);
+    }
   }
 }

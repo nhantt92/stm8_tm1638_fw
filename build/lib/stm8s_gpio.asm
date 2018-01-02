@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 3.6.0 #9615 (MINGW64)
+; Version 3.6.0 #9615 (Mac OS X x86_64)
 ;--------------------------------------------------------
 	.module stm8s_gpio
 	.optsdcc -mstm8
@@ -60,14 +60,14 @@ _GPIO_Init:
 	ldw	x, (0x06, sp)
 	incw	x
 	incw	x
-	ldw	(0x01, sp), x
-	ldw	x, (0x01, sp)
+	ldw	(0x04, sp), x
+	ldw	x, (0x04, sp)
 	clr	(x)
 ;	lib/stm8s_gpio.c: 18: GPIOx->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
 	ldw	x, (0x06, sp)
 	addw	x, #0x0003
-	ldw	(0x04, sp), x
-	ldw	x, (0x04, sp)
+	ldw	(0x02, sp), x
+	ldw	x, (0x02, sp)
 	clr	(x)
 ;	lib/stm8s_gpio.c: 19: GPIOx->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
 	ldw	y, (0x06, sp)
@@ -78,9 +78,9 @@ _GPIO_Init:
 	push	a
 	ld	a, (0x0d, sp)
 	cpl	a
-	ld	(0x04, sp), a
+	ld	(0x02, sp), a
 	pop	a
-	and	a, (0x03, sp)
+	and	a, (0x01, sp)
 	ld	(y), a
 ;	lib/stm8s_gpio.c: 27: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x80) != (uint8_t)0x00) /* Output mode */
 	tnz	(0x0d, sp)
@@ -100,23 +100,23 @@ _GPIO_Init:
 ;	lib/stm8s_gpio.c: 35: GPIOx->ODR &= (uint8_t)(~(GPIO_Pin));
 	ldw	x, (0x06, sp)
 	ld	a, (x)
-	and	a, (0x03, sp)
+	and	a, (0x01, sp)
 	ldw	x, (0x06, sp)
 	ld	(x), a
 00103$:
 ;	lib/stm8s_gpio.c: 38: GPIOx->DDR |= (uint8_t)GPIO_Pin;
-	ldw	x, (0x01, sp)
+	ldw	x, (0x04, sp)
 	ld	a, (x)
 	or	a, (0x0c, sp)
-	ldw	x, (0x01, sp)
+	ldw	x, (0x04, sp)
 	ld	(x), a
 	jra	00106$
 00105$:
 ;	lib/stm8s_gpio.c: 43: GPIOx->DDR &= (uint8_t)(~(GPIO_Pin));
-	ldw	x, (0x01, sp)
+	ldw	x, (0x04, sp)
 	ld	a, (x)
-	and	a, (0x03, sp)
-	ldw	x, (0x01, sp)
+	and	a, (0x01, sp)
+	ldw	x, (0x04, sp)
 	ld	(x), a
 00106$:
 ;	lib/stm8s_gpio.c: 48: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x40) != (uint8_t)0x00) /* Pull-Up or Push-Pull */
@@ -124,18 +124,18 @@ _GPIO_Init:
 	bcp	a, #0x40
 	jreq	00108$
 ;	lib/stm8s_gpio.c: 50: GPIOx->CR1 |= (uint8_t)GPIO_Pin;
-	ldw	x, (0x04, sp)
+	ldw	x, (0x02, sp)
 	ld	a, (x)
 	or	a, (0x0c, sp)
-	ldw	x, (0x04, sp)
+	ldw	x, (0x02, sp)
 	ld	(x), a
 	jra	00109$
 00108$:
 ;	lib/stm8s_gpio.c: 54: GPIOx->CR1 &= (uint8_t)(~(GPIO_Pin));
-	ldw	x, (0x04, sp)
+	ldw	x, (0x02, sp)
 	ld	a, (x)
-	and	a, (0x03, sp)
-	ldw	x, (0x04, sp)
+	and	a, (0x01, sp)
+	ldw	x, (0x02, sp)
 	ld	(x), a
 00109$:
 ;	lib/stm8s_gpio.c: 59: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x20) != (uint8_t)0x00) /* Interrupt or Slow slope */
@@ -150,7 +150,7 @@ _GPIO_Init:
 00111$:
 ;	lib/stm8s_gpio.c: 65: GPIOx->CR2 &= (uint8_t)(~(GPIO_Pin));
 	ld	a, (y)
-	and	a, (0x03, sp)
+	and	a, (0x01, sp)
 	ld	(y), a
 00113$:
 	addw	sp, #7

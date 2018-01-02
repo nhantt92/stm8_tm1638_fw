@@ -26,25 +26,6 @@
 // #define Reset(x) GPIO_WriteLow(GPIOC, (x))
 // #define Get(x) GPIO_ReadInputPin(GPIOC, (x)) == 1
 
-// const uint8_t NUMBER_FONT[] = {
-//   0x3F, //0
-//   0x06, //1
-//   0x5B, //2
-//   0x4F, //3
-//   0x66, //4
-//   0x6D, //5
-//   0x7D, //6
-//   0x07, //7
-//   0x7F, //8
-//   0x6F, //9
-//   0x77, //A
-//   0x7C, //B
-//   0x39, //C
-//   0x5E, //D
-//   0x79, //E
-//   0x71 //F
-// };
-
 typedef struct 
 { 
   GPIO_TypeDef* displayPort; //port
@@ -52,26 +33,22 @@ typedef struct
   GPIO_Pin_TypeDef ClkPin; // pin CLK
   GPIO_Pin_TypeDef DataPin; // pin DIO
   uint8_t intensity; // current Led brightness
+  uint8_t displays; // number led
   bool active; // enable
 }TM1638_Struct;
 
+//void TM1638_Init(void);
 void TM1638_Init(GPIO_TypeDef* displayPort,
                     GPIO_Pin_TypeDef StbPin,
                     GPIO_Pin_TypeDef ClkPin,
                     GPIO_Pin_TypeDef DataPin);
-// uint8_t Read_Byte(void);
-// void Write_Cmd(uint8_t cmd);
-// void Write_Byte(uint8_t byte);
-// uint8_t Read_Key(void);
-// void Write_Data(uint8_t addr, uint8_t data);
-// void TM1638_SendData(uint8_t i, char *str);
-// void TM1638_SendIntData(uint8_t i, int num);
 void sendChar(uint8_t pos, uint8_t data, bool dot);
 void configDisplay(bool active, uint8_t intensity);
 void setDisplayDigit(uint8_t digit, uint8_t pos, bool dot, const uint8_t numberFont[]);
 void clearDisplayDigit(uint8_t pos, bool dot);
 void setDisplay(const uint8_t values[], uint8_t size);
 void clearDisplay(void);
-void TM1638_SendData(uint8_t i, char *str);
-void TM1638_SendIntData(uint8_t i,int num);
+void displayNumber(uint8_t pos, uint8_t number, bool dot);
+uint8_t getKey(void);
+void setLed(uint8_t color, uint8_t pos);
 #endif
