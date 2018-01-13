@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 3.6.0 #9615 (Mac OS X x86_64)
+; Version 3.6.0 #9615 (MINGW64)
 ;--------------------------------------------------------
 	.module main
 	.optsdcc -mstm8
@@ -13,9 +13,11 @@
 	.globl _TIM4_UPD_OVF_IRQHandler
 	.globl _clock_setup
 	.globl _setLed
+	.globl _getKey
 	.globl _displayNumber
 	.globl _configDisplay
 	.globl _TM1638_Init
+	.globl _TIMER_CheckTimeMS
 	.globl _TIMER_InitTime
 	.globl _TIMER_Inc
 	.globl _TIMER_Init
@@ -249,6 +251,7 @@ _delay:
 ;	 function main
 ;	-----------------------------------------
 _main:
+	pushw	x
 ;	user/main.c: 79: clock_setup();
 	call	_clock_setup
 ;	user/main.c: 80: TM1638_Init(GPIOC, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
@@ -270,13 +273,15 @@ _main:
 	rim
 ;	user/main.c: 86: TIMER_InitTime(&tick);
 	ldw	x, #_tick+0
+	ldw	(0x01, sp), x
+	ldw	x, (0x01, sp)
 	pushw	x
 	call	_TIMER_InitTime
 	popw	x
-;	user/main.c: 88: for(i = 0; i < 8; i++)
+;	user/main.c: 87: for(i = 0; i < 8; i++)
 	clr	a
-00108$:
-;	user/main.c: 90: displayNumber(i, i, FALSE);
+00118$:
+;	user/main.c: 89: displayNumber(i, i, FALSE);
 	push	a
 	push	#0x00
 	push	a
@@ -284,62 +289,129 @@ _main:
 	call	_displayNumber
 	addw	sp, #3
 	pop	a
-;	user/main.c: 88: for(i = 0; i < 8; i++)
+;	user/main.c: 87: for(i = 0; i < 8; i++)
 	inc	a
 	cp	a, #0x08
-	jrc	00108$
-;	user/main.c: 92: for(i = 0; i < 8; i++)
-	clr	a
-00110$:
-;	user/main.c: 94: setLed(0, i);
-	push	a
-	push	a
+	jrc	00118$
+;	user/main.c: 91: while(1) 
+00116$:
+;	user/main.c: 103: if(TIMER_CheckTimeMS(&tick, 100) == 0)
+	ldw	y, (0x01, sp)
+	push	#0x64
+	clrw	x
+	pushw	x
 	push	#0x00
-	call	_setLed
-	popw	x
-	pop	a
-;	user/main.c: 92: for(i = 0; i < 8; i++)
-	inc	a
+	pushw	y
+	call	_TIMER_CheckTimeMS
+	addw	sp, #6
+	tnz	a
+	jrne	00116$
+;	user/main.c: 105: key = getKey();
+	call	_getKey
+;	user/main.c: 106: switch(key)
 	cp	a, #0x08
-	jrc	00110$
-;	user/main.c: 98: for(i = 0; i < 8; i++)
-00121$:
-	clr	a
-00112$:
-;	user/main.c: 100: setLed(1, i);
-	push	a
-	push	a
+	jrule	00152$
+	jp	00128$
+00152$:
+	clrw	x
+	ld	xl, a
+	sllw	x
+	ldw	x, (#00153$, x)
+	jp	(x)
+00153$:
+	.dw	#00110$
+	.dw	#00102$
+	.dw	#00103$
+	.dw	#00104$
+	.dw	#00105$
+	.dw	#00106$
+	.dw	#00107$
+	.dw	#00108$
+	.dw	#00109$
+;	user/main.c: 108: case 1: setLed(1, 0);
+00102$:
+	push	#0x00
 	push	#0x01
 	call	_setLed
 	popw	x
-	push	#0x50
-	push	#0xc3
-	call	_delay
+;	user/main.c: 109: break;
+	jra	00116$
+;	user/main.c: 110: case 2: setLed(1, 1);
+00103$:
+	push	#0x01
+	push	#0x01
+	call	_setLed
 	popw	x
-	pop	a
-;	user/main.c: 98: for(i = 0; i < 8; i++)
-	inc	a
-	cp	a, #0x08
-	jrc	00112$
-;	user/main.c: 103: for(i = 0; i < 8; i++)
+;	user/main.c: 111: break;
+	jra	00116$
+;	user/main.c: 112: case 3: setLed(1, 2);
+00104$:
+	push	#0x02
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 113: break;
+	jra	00116$
+;	user/main.c: 114: case 4: setLed(1, 3);
+00105$:
+	push	#0x03
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 115: break;
+	jra	00116$
+;	user/main.c: 116: case 5: setLed(1, 4);
+00106$:
+	push	#0x04
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 117: break;
+	jp	00116$
+;	user/main.c: 118: case 6: setLed(1, 5);
+00107$:
+	push	#0x05
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 119: break;
+	jp	00116$
+;	user/main.c: 120: case 7: setLed(1, 6);
+00108$:
+	push	#0x06
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 121: break;
+	jp	00116$
+;	user/main.c: 122: case 8: setLed(1, 7);
+00109$:
+	push	#0x07
+	push	#0x01
+	call	_setLed
+	popw	x
+;	user/main.c: 123: break;
+	jp	00116$
+;	user/main.c: 124: default:  
+00110$:
+;	user/main.c: 125: for(i = 0; i < 8; i++)
+00128$:
 	clr	a
-00114$:
-;	user/main.c: 105: setLed(0, i);
+00120$:
+;	user/main.c: 127: setLed(0, i);
 	push	a
 	push	a
 	push	#0x00
 	call	_setLed
 	popw	x
-	push	#0x50
-	push	#0xc3
-	call	_delay
-	popw	x
 	pop	a
-;	user/main.c: 103: for(i = 0; i < 8; i++)
+;	user/main.c: 125: for(i = 0; i < 8; i++)
 	inc	a
 	cp	a, #0x08
-	jrc	00114$
-	jra	00121$
+	jrc	00120$
+;	user/main.c: 130: }
+	jp	00116$
+	popw	x
 	ret
 	.area CODE
 	.area INITIALIZER

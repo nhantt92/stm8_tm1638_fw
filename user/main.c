@@ -75,7 +75,7 @@ void delay(uint16_t x)
 
 void main() 
 {
-  uint8_t i = 0;
+  uint8_t i, key;
   clock_setup();
   TM1638_Init(GPIOC, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
   configDisplay(1, 0x07);
@@ -84,26 +84,40 @@ void main()
   //IWDG_Config();
   enableInterrupts();
   TIMER_InitTime(&tick);
-  //sendChar(1, 0x3F, 0);
   for(i = 0; i < 8; i++)
   {
     displayNumber(i, i, FALSE);
   }
-   for(i = 0; i < 8; i++)
-    {
-        setLed(0, i);
-    }
   while(1) 
   {
-    for(i = 0; i < 8; i++)
+    if(TIMER_CheckTimeMS(&tick, 100) == 0)
     {
-        setLed(1, i);
-        delay(50000);
-    }
-    for(i = 0; i < 8; i++)
-    {
-        setLed(0, i);
-        delay(50000);
+      key = getKey();
+      switch(key)
+      {
+        case 1: setLed(1, 0);
+          break;
+        case 2: setLed(1, 1);
+          break;
+        case 3: setLed(1, 2);
+          break;
+        case 4: setLed(1, 3);
+          break;
+        case 5: setLed(1, 4);
+          break;
+        case 6: setLed(1, 5);
+          break;
+        case 7: setLed(1, 6);
+          break;
+        case 8: setLed(1, 7);
+          break;
+        default:  
+          for(i = 0; i < 8; i++)
+          {
+            setLed(0, i);
+          }
+          break;
+      }
     }
   }
 }

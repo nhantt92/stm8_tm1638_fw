@@ -81,8 +81,8 @@ static uint8_t readByte(void)
 {
 	uint8_t i = 0;
 	uint8_t temp = 0x00;
-	GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_IN_PU_NO_IT);
-	Set(tm1638.DataPin);
+	//GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_IN_PU_NO_IT);
+	//Set(tm1638.DataPin);
 	for(i = 0; i < 8; i++)
 	{
 		temp>>=1;
@@ -90,8 +90,8 @@ static uint8_t readByte(void)
 		if(Get(tm1638.DataPin)) temp |= 0x80;
 		Reset(tm1638.ClkPin);
 	}
-	GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
-	Reset(tm1638.DataPin);
+	//GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
+	//Reset(tm1638.DataPin);
 	return temp;
 }
 
@@ -176,20 +176,20 @@ void setLed(uint8_t color, uint8_t pos)
 
 uint8_t getKey(void)
 {
-	uint8_t i = 0;
-	uint8_t key1 = 0x00;
+	uint8_t i;
+	uint8_t key1 =  0x00;
 	uint16_t key2 = 0x00;
 	writeCmd(0x42);
 	Set(tm1638.DataPin);
 	for(i = 0; i < 4; i++)
 	{
 		key1 = readByte();
-		key2 |= (key1<<i);
+		key2|= (key1<<i);
 	}
-	key2>=1;
+	key2>>=1;
 	for(i = 0; i < 8; i++)
 	{
-		if(0x00<<i == key2) return i+1;
+		if(0x01<<i ==key2) return i+1;
 	}
 	return 0;
 }

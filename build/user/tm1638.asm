@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 3.6.0 #9615 (Mac OS X x86_64)
+; Version 3.6.0 #9615 (MINGW64)
 ;--------------------------------------------------------
 	.module tm1638
 	.optsdcc -mstm8
@@ -67,48 +67,48 @@ _TM1638_Init:
 	ldw	(x), y
 ;	user/tm1638.c: 49: tm1638.StbPin = StbPin;
 	ldw	x, #_tm1638+0
+	ldw	(0x03, sp), x
+	ldw	x, (0x03, sp)
+	incw	x
+	incw	x
 	ldw	(0x0a, sp), x
 	ldw	x, (0x0a, sp)
-	incw	x
-	incw	x
-	ldw	(0x08, sp), x
-	ldw	x, (0x08, sp)
 	ld	a, (0x10, sp)
 	ld	(x), a
 ;	user/tm1638.c: 50: tm1638.ClkPin = ClkPin;
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	addw	x, #0x0003
-	ldw	(0x06, sp), x
-	ldw	x, (0x06, sp)
+	ldw	(0x01, sp), x
+	ldw	x, (0x01, sp)
 	ld	a, (0x11, sp)
 	ld	(x), a
 ;	user/tm1638.c: 51: tm1638.DataPin = DataPin;
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	ld	a, (0x12, sp)
 	ld	(0x0004, x), a
 ;	user/tm1638.c: 52: tm1638.intensity = 4;
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	addw	x, #0x0005
-	ldw	(0x04, sp), x
-	ldw	x, (0x04, sp)
+	ldw	(0x08, sp), x
+	ldw	x, (0x08, sp)
 	ld	a, #0x04
 	ld	(x), a
 ;	user/tm1638.c: 53: tm1638.displays = 8;
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	ld	a, #0x08
 	ld	(0x0006, x), a
 ;	user/tm1638.c: 54: tm1638.active = TRUE;
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	addw	x, #0x0007
-	ldw	(0x02, sp), x
-	ldw	x, (0x02, sp)
+	ldw	(0x06, sp), x
+	ldw	x, (0x06, sp)
 	ld	a, #0x01
 	ld	(x), a
 ;	user/tm1638.c: 55: GPIO_Init(tm1638.displayPort, tm1638.StbPin | tm1638.ClkPin | tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
 	ld	a, (0x10, sp)
 	or	a, (0x11, sp)
 	or	a, (0x12, sp)
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	#0xb0
 	push	a
@@ -116,18 +116,18 @@ _TM1638_Init:
 	call	_GPIO_Init
 	addw	sp, #4
 ;	user/tm1638.c: 56: Set(tm1638.StbPin);
-	ldw	x, (0x08, sp)
-	ld	a, (x)
 	ldw	x, (0x0a, sp)
+	ld	a, (x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
 	call	_GPIO_WriteHigh
 	addw	sp, #3
 ;	user/tm1638.c: 57: Set(tm1638.ClkPin);
-	ldw	x, (0x06, sp)
+	ldw	x, (0x01, sp)
 	ld	a, (x)
-	ldw	x, (0x0a, sp)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -138,7 +138,7 @@ _TM1638_Init:
 	call	_writeCmd
 	pop	a
 ;	user/tm1638.c: 59: writeCmd(0x80|(tm1638.active ? 8 : 0)|tm1638.intensity); //display and brightness = 4
-	ldw	x, (0x02, sp)
+	ldw	x, (0x06, sp)
 	ld	a, (x)
 	tnz	a
 	jreq	00106$
@@ -148,17 +148,17 @@ _TM1638_Init:
 	clr	a
 00107$:
 	or	a, #0x80
-	ld	(0x01, sp), a
-	ldw	x, (0x04, sp)
+	ld	(0x05, sp), a
+	ldw	x, (0x08, sp)
 	ld	a, (x)
-	or	a, (0x01, sp)
+	or	a, (0x05, sp)
 	push	a
 	call	_writeCmd
 	pop	a
 ;	user/tm1638.c: 60: Reset(tm1638.StbPin);
-	ldw	x, (0x08, sp)
-	ld	a, (x)
 	ldw	x, (0x0a, sp)
+	ld	a, (x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -182,9 +182,9 @@ _TM1638_Init:
 	cp	a, #0x10
 	jrc	00102$
 ;	user/tm1638.c: 64: Set(tm1638.StbPin);
-	ldw	x, (0x08, sp)
-	ld	a, (x)
 	ldw	x, (0x0a, sp)
+	ld	a, (x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -262,42 +262,22 @@ _readByte:
 	sub	sp, #8
 ;	user/tm1638.c: 83: uint8_t temp = 0x00;
 	clr	(0x01, sp)
-;	user/tm1638.c: 84: GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_IN_PU_NO_IT);
-	ldw	x, #_tm1638+0
-	ldw	(0x07, sp), x
-	ldw	x, (0x07, sp)
-	addw	x, #0x0004
-	ldw	(0x05, sp), x
-	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ldw	x, (0x07, sp)
-	ldw	x, (x)
-	push	#0x40
-	push	a
-	pushw	x
-	call	_GPIO_Init
-	addw	sp, #4
-;	user/tm1638.c: 85: Set(tm1638.DataPin);
-	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ldw	x, (0x07, sp)
-	ldw	x, (x)
-	push	a
-	pushw	x
-	call	_GPIO_WriteHigh
-	addw	sp, #3
 ;	user/tm1638.c: 86: for(i = 0; i < 8; i++)
-	ldw	x, (0x07, sp)
-	addw	x, #0x0003
+	ldw	x, #_tm1638+0
 	ldw	(0x03, sp), x
+	ldw	x, (0x03, sp)
+	addw	x, #0x0003
+	ldw	(0x07, sp), x
+	ldw	y, (0x03, sp)
+	ldw	(0x05, sp), y
 	clr	(0x02, sp)
 00104$:
 ;	user/tm1638.c: 88: temp>>=1;
 	srl	(0x01, sp)
 ;	user/tm1638.c: 89: Set(tm1638.ClkPin); //Output Data at falling edge of the clock
-	ldw	x, (0x03, sp)
-	ld	a, (x)
 	ldw	x, (0x07, sp)
+	ld	a, (x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -305,8 +285,8 @@ _readByte:
 	addw	sp, #3
 ;	user/tm1638.c: 90: if(Get(tm1638.DataPin)) temp |= 0x80;
 	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ldw	x, (0x07, sp)
+	ld	a, (0x4, x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -319,9 +299,9 @@ _readByte:
 	ld	(0x01, sp), a
 00102$:
 ;	user/tm1638.c: 91: Reset(tm1638.ClkPin);
-	ldw	x, (0x03, sp)
-	ld	a, (x)
 	ldw	x, (0x07, sp)
+	ld	a, (x)
+	ldw	x, (0x03, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -332,25 +312,6 @@ _readByte:
 	ld	a, (0x02, sp)
 	cp	a, #0x08
 	jrc	00104$
-;	user/tm1638.c: 93: GPIO_Init(tm1638.displayPort, tm1638.DataPin, GPIO_MODE_OUT_OD_HIZ_FAST);
-	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ldw	x, (0x07, sp)
-	ldw	x, (x)
-	push	#0xb0
-	push	a
-	pushw	x
-	call	_GPIO_Init
-	addw	sp, #4
-;	user/tm1638.c: 94: Reset(tm1638.DataPin);
-	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ldw	x, (0x07, sp)
-	ldw	x, (x)
-	push	a
-	pushw	x
-	call	_GPIO_WriteLow
-	addw	sp, #3
 ;	user/tm1638.c: 95: return temp;
 	ld	a, (0x01, sp)
 	addw	sp, #8
@@ -443,13 +404,13 @@ _configDisplay:
 	sub	sp, #5
 ;	user/tm1638.c: 120: tm1638.intensity = intensity;
 	ldw	x, #_tm1638+0
-	ldw	(0x04, sp), x
-	ldw	x, (0x04, sp)
+	ldw	(0x01, sp), x
+	ldw	x, (0x01, sp)
 	addw	x, #0x0005
 	ld	a, (0x09, sp)
 	ld	(x), a
 ;	user/tm1638.c: 121: tm1638.active = active;
-	ldw	y, (0x04, sp)
+	ldw	y, (0x01, sp)
 	addw	y, #0x0007
 	ld	a, (0x08, sp)
 	ld	(y), a
@@ -469,23 +430,23 @@ _configDisplay:
 	call	_writeCmd
 	pop	a
 ;	user/tm1638.c: 123: Reset(tm1638.StbPin);
-	ldw	x, (0x04, sp)
-	incw	x
-	incw	x
-	ldw	(0x01, sp), x
 	ldw	x, (0x01, sp)
-	ld	a, (x)
+	incw	x
+	incw	x
+	ldw	(0x04, sp), x
 	ldw	x, (0x04, sp)
+	ld	a, (x)
+	ldw	x, (0x01, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
 	call	_GPIO_WriteLow
 	addw	sp, #3
 ;	user/tm1638.c: 124: Reset(tm1638.ClkPin);
-	ldw	x, (0x04, sp)
+	ldw	x, (0x01, sp)
 	addw	x, #0x0003
 	ld	a, (x)
-	ldw	y, (0x04, sp)
+	ldw	y, (0x01, sp)
 	ldw	y, (y)
 	pushw	x
 	push	a
@@ -495,16 +456,16 @@ _configDisplay:
 	popw	x
 ;	user/tm1638.c: 125: Set(tm1638.ClkPin);
 	ld	a, (x)
-	ldw	x, (0x04, sp)
+	ldw	x, (0x01, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
 	call	_GPIO_WriteHigh
 	addw	sp, #3
 ;	user/tm1638.c: 126: Set(tm1638.StbPin);
-	ldw	x, (0x01, sp)
-	ld	a, (x)
 	ldw	x, (0x04, sp)
+	ld	a, (x)
+	ldw	x, (0x01, sp)
 	ldw	x, (x)
 	push	a
 	pushw	x
@@ -641,18 +602,18 @@ _setLed:
 ;	 function getKey
 ;	-----------------------------------------
 _getKey:
-	sub	sp, #6
+	sub	sp, #8
 ;	user/tm1638.c: 181: uint16_t key2 = 0x00;
 	clrw	x
-	ldw	(0x01, sp), x
+	ldw	(0x04, sp), x
 ;	user/tm1638.c: 182: writeCmd(0x42);
 	push	#0x42
 	call	_writeCmd
 	pop	a
 ;	user/tm1638.c: 183: Set(tm1638.DataPin);
 	ldw	x, #_tm1638+0
-	ldw	(0x05, sp), x
-	ldw	y, (0x05, sp)
+	ldw	(0x06, sp), x
+	ldw	y, (0x06, sp)
 	ld	a, (0x4, y)
 	ldw	x, (x)
 	push	a
@@ -664,7 +625,7 @@ _getKey:
 00105$:
 ;	user/tm1638.c: 186: key1 = readByte();
 	call	_readByte
-;	user/tm1638.c: 187: key2 |= (key1<<i);
+;	user/tm1638.c: 187: key2|= (key1<<i);
 	clrw	x
 	ld	xl, a
 	ld	a, (0x03, sp)
@@ -675,23 +636,27 @@ _getKey:
 	jrne	00132$
 00133$:
 	ld	a, xl
-	or	a, (0x02, sp)
+	or	a, (0x05, sp)
 	rlwa	x
-	or	a, (0x01, sp)
+	or	a, (0x04, sp)
 	ld	xh, a
-	ldw	(0x01, sp), x
+	ldw	(0x04, sp), x
 ;	user/tm1638.c: 184: for(i = 0; i < 4; i++)
 	inc	(0x03, sp)
 	ld	a, (0x03, sp)
 	cp	a, #0x04
 	jrc	00105$
+;	user/tm1638.c: 189: key2>>=1;
+	ldw	x, (0x04, sp)
+	srlw	x
+	ldw	(0x01, sp), x
 ;	user/tm1638.c: 190: for(i = 0; i < 8; i++)
-	clr	(0x04, sp)
+	clr	(0x08, sp)
 	clr	a
 00107$:
-;	user/tm1638.c: 192: if(0x00<<i == key2) return i+1;
+;	user/tm1638.c: 192: if(0x01<<i ==key2) return i+1;
 	push	a
-	clrw	x
+	ldw	x, #0x0001
 	tnz	a
 	jreq	00136$
 00135$:
@@ -702,19 +667,19 @@ _getKey:
 	pop	a
 	cpw	x, (0x01, sp)
 	jrne	00108$
-	ld	a, (0x04, sp)
+	ld	a, (0x08, sp)
 	inc	a
 	jra	00109$
 00108$:
 ;	user/tm1638.c: 190: for(i = 0; i < 8; i++)
 	inc	a
-	ld	(0x04, sp), a
+	ld	(0x08, sp), a
 	cp	a, #0x08
 	jrc	00107$
 ;	user/tm1638.c: 194: return 0;
 	clr	a
 00109$:
-	addw	sp, #6
+	addw	sp, #8
 	ret
 	.area CODE
 _NUMBER_FONT:

@@ -51,4 +51,5 @@ void clearDisplay(void);
 void displayNumber(uint8_t pos, uint8_t number, bool dot);
 uint8_t getKey(void);
 void setLed(uint8_t color, uint8_t pos);
+
 #endif

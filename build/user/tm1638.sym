@@ -7,27 +7,27 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000001 L
-  7 _ERROR_DATA                                                    00035A GR
+  7 _ERROR_DATA                                                    000327 GR
     _GPIO_Init                                                     ****** GX
     _GPIO_ReadInputPin                                             ****** GX
     _GPIO_WriteHigh                                                ****** GX
     _GPIO_WriteLow                                                 ****** GX
-  7 _NUMBER_FONT                                                   00034A GR
+  7 _NUMBER_FONT                                                   000317 GR
   7 _TM1638_Init                                                   000000 GR
-  7 _clearDisplay                                                  0002B6 GR
-  7 _clearDisplayDigit                                             000288 GR
-  7 _configDisplay                                                 000202 GR
-  7 _displayNumber                                                 0002CA GR
-  7 _getKey                                                        0002EC GR
+  7 _clearDisplay                                                  00027C GR
+  7 _clearDisplayDigit                                             00024E GR
+  7 _configDisplay                                                 0001C8 GR
+  7 _displayNumber                                                 000290 GR
+  7 _getKey                                                        0002B2 GR
   7 _readByte                                                      000117 R
-  7 _sendChar                                                      0001EB GR
-  7 _setDisplay                                                    000296 GR
-  7 _setDisplayDigit                                               00026F GR
-  7 _setLed                                                        0002DD GR
+  7 _sendChar                                                      0001B1 GR
+  7 _setDisplay                                                    00025C GR
+  7 _setDisplayDigit                                               000235 GR
+  7 _setLed                                                        0002A3 GR
   1 _tm1638                                                        000000 GR
   7 _writeByte                                                     0000C1 R
-  7 _writeCmd                                                      0001A7 R
-  7 _writeData                                                     0001D4 R
+  7 _writeCmd                                                      00016D R
+  7 _writeData                                                     00019A R
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
@@ -42,7 +42,7 @@ Area Table
    4 HOME                                       size      0   flags    0
    5 GSINIT                                     size      0   flags    0
    6 GSFINAL                                    size      0   flags    0
-   7 CODE                                       size    362   flags    0
+   7 CODE                                       size    32F   flags    0
    8 INITIALIZER                                size      0   flags    0
    9 CABS                                       size      0   flags    8
 

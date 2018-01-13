@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 3.6.0 #9615 (Mac OS X x86_64)
+; Version 3.6.0 #9615 (MINGW64)
 ;--------------------------------------------------------
 	.module stm8s_clk
 	.optsdcc -mstm8
@@ -302,7 +302,7 @@ _CLK_ClockSwitchConfig:
 ;	lib/stm8s_clk.c: 299: clock_master = (CLK_Source_TypeDef)CLK->CMSR;
 	ldw	x, #0x50c3
 	ld	a, (x)
-	ld	(0x02, sp), a
+	ld	(0x01, sp), a
 ;	lib/stm8s_clk.c: 302: if (CLK_SwitchMode == CLK_SWITCHMODE_AUTO)
 	ld	a, (0x05, sp)
 	cp	a, #0x01
@@ -350,11 +350,11 @@ _CLK_ClockSwitchConfig:
 	jreq	00109$
 ;	lib/stm8s_clk.c: 328: Swif = SUCCESS;
 	ld	a, #0x01
-	ld	(0x01, sp), a
+	ld	(0x02, sp), a
 	jra	00123$
 00109$:
 ;	lib/stm8s_clk.c: 332: Swif = ERROR;
-	clr	(0x01, sp)
+	clr	(0x02, sp)
 	jra	00123$
 00122$:
 ;	lib/stm8s_clk.c: 338: if (ITState != DISABLE)
@@ -400,19 +400,19 @@ _CLK_ClockSwitchConfig:
 	ld	(x), a
 ;	lib/stm8s_clk.c: 360: Swif = SUCCESS;
 	ld	a, #0x01
-	ld	(0x01, sp), a
+	ld	(0x02, sp), a
 	jra	00123$
 00119$:
 ;	lib/stm8s_clk.c: 364: Swif = ERROR;
-	clr	(0x01, sp)
+	clr	(0x02, sp)
 00123$:
 ;	lib/stm8s_clk.c: 367: if(Swif != ERROR)
-	tnz	(0x01, sp)
+	tnz	(0x02, sp)
 	jreq	00136$
 ;	lib/stm8s_clk.c: 370: if((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSI))
 	tnz	(0x08, sp)
 	jrne	00132$
-	ld	a, (0x02, sp)
+	ld	a, (0x01, sp)
 	cp	a, #0xe1
 	jrne	00132$
 ;	lib/stm8s_clk.c: 372: CLK->ICKR &= (uint8_t)(~CLK_ICKR_HSIEN);
@@ -422,7 +422,7 @@ _CLK_ClockSwitchConfig:
 ;	lib/stm8s_clk.c: 374: else if((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_LSI))
 	tnz	(0x08, sp)
 	jrne	00128$
-	ld	a, (0x02, sp)
+	ld	a, (0x01, sp)
 	cp	a, #0xd2
 	jrne	00128$
 ;	lib/stm8s_clk.c: 376: CLK->ICKR &= (uint8_t)(~CLK_ICKR_LSIEN);
@@ -435,14 +435,14 @@ _CLK_ClockSwitchConfig:
 ;	lib/stm8s_clk.c: 378: else if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSE))
 	tnz	(0x08, sp)
 	jrne	00136$
-	ld	a, (0x02, sp)
+	ld	a, (0x01, sp)
 	cp	a, #0xb4
 	jrne	00136$
 ;	lib/stm8s_clk.c: 380: CLK->ECKR &= (uint8_t)(~CLK_ECKR_HSEEN);
 	bres	0x50c1, #0
 00136$:
 ;	lib/stm8s_clk.c: 383: return(Swif);
-	ld	a, (0x01, sp)
+	ld	a, (0x02, sp)
 	popw	x
 	ret
 ;	lib/stm8s_clk.c: 392: void CLK_HSIPrescalerConfig(CLK_Prescaler_TypeDef HSIPrescaler)
@@ -571,10 +571,10 @@ _CLK_SYSCLKConfig:
 ;	lib/stm8s_clk.c: 475: CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_HSIDIV);
 	ldw	x, #0x50c6
 	ld	a, (x)
-	ld	(0x02, sp), a
+	ld	(0x01, sp), a
 	ld	a, (0x05, sp)
 	and	a, #0x18
-	or	a, (0x02, sp)
+	or	a, (0x01, sp)
 	ldw	x, #0x50c6
 	ld	(x), a
 	jra	00104$
@@ -587,10 +587,10 @@ _CLK_SYSCLKConfig:
 ;	lib/stm8s_clk.c: 480: CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_CPUDIV);
 	ldw	x, #0x50c6
 	ld	a, (x)
-	ld	(0x01, sp), a
+	ld	(0x02, sp), a
 	ld	a, (0x05, sp)
 	and	a, #0x07
-	or	a, (0x01, sp)
+	or	a, (0x02, sp)
 	ldw	x, #0x50c6
 	ld	(x), a
 00104$:

@@ -19,6 +19,7 @@ Symbol Table
     _CLK_SYSCLKConfig                                              ****** GX
     _TIM4_ClearITPendingBit                                        ****** GX
   8 _TIM4_UPD_OVF_IRQHandler                                       000080 GR
+    _TIMER_CheckTimeMS                                             ****** GX
     _TIMER_Inc                                                     ****** GX
     _TIMER_Init                                                    ****** GX
     _TIMER_InitTime                                                ****** GX
@@ -32,6 +33,7 @@ Symbol Table
     _configDisplay                                                 ****** GX
   8 _delay                                                         00008B GR
     _displayNumber                                                 ****** GX
+    _getKey                                                        ****** GX
   8 _main                                                          000097 GR
     _setLed                                                        ****** GX
   1 _tick                                                          000000 GR
@@ -56,7 +58,7 @@ Area Table
    5 HOME                                       size     83   flags    0
    6 GSINIT                                     size     1A   flags    0
    7 GSFINAL                                    size      3   flags    0
-   8 CODE                                       size    10E   flags    0
+   8 CODE                                       size    170   flags    0
    9 INITIALIZER                                size      0   flags    0
    A CABS                                       size      0   flags    8
 
